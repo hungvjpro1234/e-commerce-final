@@ -1,5 +1,6 @@
 from django.db.models import ForeignKey, OneToOneField
 from django.test import TestCase
+from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.test import APIClient
 
 from .models import Category, Product
@@ -22,3 +23,19 @@ class ProductApiTests(TestCase):
         response = client.get("/products/")
         self.assertEqual(response.status_code, 200)
 
+    def test_customer_cannot_create_product(self):
+        category = Category.objects.create(name="Books")
+        token = AccessToken()
+        token["user_id"] = 1
+        token["id"] = 1
+        token["role"] = "customer"
+
+        client = APIClient()
+        response = client.post(
+            "/products/",
+            {"name": "Test", "price": 10, "stock": 5, "category": category.id},
+            format="json",
+            HTTP_AUTHORIZATION=f"Bearer {token}",
+        )
+
+        self.assertEqual(response.status_code, 403)

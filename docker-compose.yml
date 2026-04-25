@@ -1,3 +1,9 @@
+x-security-env: &security-env
+  JWT_SIGNING_KEY: shared-jwt-signing-key
+  INTERNAL_SERVICE_JWT_SECRET: internal-service-secret
+  INTERNAL_SERVICE_JWT_ALGORITHM: HS256
+  INTERNAL_SERVICE_ISSUER: order-service
+
 services:
   product-db:
     image: postgres:16
@@ -86,6 +92,9 @@ services:
     container_name: product-service
     env_file:
       - ./product-service/.env.example
+    environment:
+      <<: *security-env
+      INTERNAL_SERVICE_AUDIENCE: product-service
     volumes:
       - ./product-service:/app
     ports:
@@ -104,6 +113,8 @@ services:
     container_name: user-service
     env_file:
       - ./user-service/.env.example
+    environment:
+      <<: *security-env
     volumes:
       - ./user-service:/app
     ports:
@@ -122,6 +133,9 @@ services:
     container_name: cart-service
     env_file:
       - ./cart-service/.env.example
+    environment:
+      <<: *security-env
+      INTERNAL_SERVICE_AUDIENCE: cart-service
     volumes:
       - ./cart-service:/app
     ports:
@@ -140,6 +154,9 @@ services:
     container_name: order-service
     env_file:
       - ./order-service/.env.example
+    environment:
+      <<: *security-env
+      INTERNAL_SERVICE_NAME: order-service
     volumes:
       - ./order-service:/app
     ports:
@@ -162,6 +179,9 @@ services:
     container_name: payment-service
     env_file:
       - ./payment-service/.env.example
+    environment:
+      <<: *security-env
+      INTERNAL_SERVICE_AUDIENCE: payment-service
     volumes:
       - ./payment-service:/app
     ports:
@@ -180,6 +200,9 @@ services:
     container_name: shipping-service
     env_file:
       - ./shipping-service/.env.example
+    environment:
+      <<: *security-env
+      INTERNAL_SERVICE_AUDIENCE: shipping-service
     volumes:
       - ./shipping-service:/app
     ports:

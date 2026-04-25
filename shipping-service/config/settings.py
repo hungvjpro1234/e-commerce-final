@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "app",
 ]
 
@@ -74,8 +75,20 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ]
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
+JWT_SIGNING_KEY = os.getenv("JWT_SIGNING_KEY", "shared-jwt-signing-key")
+INTERNAL_SERVICE_JWT_SECRET = os.getenv("INTERNAL_SERVICE_JWT_SECRET", "internal-service-secret")
+INTERNAL_SERVICE_JWT_ALGORITHM = os.getenv("INTERNAL_SERVICE_JWT_ALGORITHM", "HS256")
+INTERNAL_SERVICE_ISSUER = os.getenv("INTERNAL_SERVICE_ISSUER", "order-service")
+INTERNAL_SERVICE_AUDIENCE = os.getenv("INTERNAL_SERVICE_AUDIENCE", "shipping-service")
+
+SIMPLE_JWT = {
+    "SIGNING_KEY": JWT_SIGNING_KEY,
+}

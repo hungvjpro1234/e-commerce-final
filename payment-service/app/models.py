@@ -9,6 +9,6 @@ class Payment(models.Model):
     )
 
     order_id = models.IntegerField()
+    user_id = models.IntegerField()
     amount = models.FloatField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="Pending")
-

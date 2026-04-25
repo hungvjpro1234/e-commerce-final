@@ -9,6 +9,6 @@ class Shipment(models.Model):
     )
 
     order_id = models.IntegerField()
+    user_id = models.IntegerField()
     address = models.TextField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="Processing")
-

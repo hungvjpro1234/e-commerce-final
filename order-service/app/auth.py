@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timedelta, timezone
 
 import jwt
 from django.conf import settings
@@ -71,6 +72,7 @@ def get_correlation_id(request):
 
 def build_internal_service_token(audience):
     payload = {
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
         "iss": settings.INTERNAL_SERVICE_ISSUER,
         "aud": audience,
         "service": settings.INTERNAL_SERVICE_NAME,

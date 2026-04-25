@@ -60,6 +60,23 @@ class ProductSerializer(serializers.ModelSerializer):
         detail_type = validated_data.pop("detail_type", None)
         detail = validated_data.pop("detail", {})
         product = Product.objects.create(**validated_data)
+        self._sync_detail(product, detail_type, detail)
+        return product
+
+    def update(self, instance, validated_data):
+        detail_type = validated_data.pop("detail_type", None)
+        detail = validated_data.pop("detail", None)
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        instance.save()
+        if detail_type:
+            self._sync_detail(instance, detail_type, detail or {})
+        return instance
+
+    def _sync_detail(self, product, detail_type, detail):
+        Book.objects.filter(product=product).delete()
+        Electronics.objects.filter(product=product).delete()
+        Fashion.objects.filter(product=product).delete()
         if detail_type == "book":
             Book.objects.create(product=product, **detail)
         elif detail_type == "electronics":
@@ -67,4 +84,3 @@ class ProductSerializer(serializers.ModelSerializer):
         elif detail_type == "fashion":
             Fashion.objects.create(product=product, **detail)
         return product
-
