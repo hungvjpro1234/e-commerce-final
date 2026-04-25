@@ -1,28 +1,43 @@
-# E-Commerce Microservices with Django/DRF
+# E-Commerce Microservices Monorepo
 
-Monorepo nay trien khai 6 microservice Django REST Framework theo bounded context:
+Monorepo nay chua day du stack MVP cho he thong e-commerce gom:
 
-- `product-service`
-- `user-service`
-- `cart-service`
-- `order-service`
-- `payment-service`
-- `shipping-service`
+- 6 Django REST Framework microservice
+- 1 frontend Next.js 14
+- Docker Compose de chay toan bo he thong
+- Seed data va smoke test script cho luong mua hang
 
-## Kien truc
+## Trang thai project
 
-- Moi service la mot Django project/app doc lap.
-- Moi service co database rieng.
-- `product-service` dung PostgreSQL `product_db`.
+Trang thai hien tai: `MVP integration complete`
+
+Repo da co source cho:
+
+- `product-service`: quan ly category, product, book, electronics, fashion
+- `user-service`: dang ky, dang nhap, phan quyen `admin` / `staff` / `customer`
+- `cart-service`: them, cap nhat, xoa va xem gio hang
+- `order-service`: tao don, xem danh sach, xem chi tiet, cap nhat trang thai, dieu phoi goi sang payment va shipping
+- `payment-service`: tao payment noi bo, tra cuu trang thai, ho tro `simulate_failure`
+- `shipping-service`: tao shipment noi bo, tra cuu va cap nhat trang thai giao hang
+- `frontend`: giao dien catalog, auth, cart, checkout, order tracking, dashboard cho admin va staff
+
+## Kien truc hien tai
+
+- Moi service la mot Django project doc lap.
+- Moi service co database rieng, khong co `ForeignKey` xuyen service.
+- `product-service` dung PostgreSQL.
 - `user-service`, `cart-service`, `order-service`, `payment-service`, `shipping-service` dung MySQL rieng.
-- Khong co `ForeignKey` xuyen service.
-- Giao tiep lien service thong qua REST API.
+- Frontend su dung Next.js App Router va route `/api/[...path]` lam API gateway noi bo.
+- Xac thuc nguoi dung dung JWT cua `user-service`.
+- Goi service-to-service dung internal JWT do `order-service` ky.
 
 ## Cau truc repo
 
 ```text
 .
 |-- docker-compose.yml
+|-- docs/
+|-- frontend/
 |-- product-service/
 |-- user-service/
 |-- cart-service/
@@ -31,23 +46,51 @@ Monorepo nay trien khai 6 microservice Django REST Framework theo bounded contex
 `-- shipping-service/
 ```
 
+## Trang thai theo thanh phan
+
+### Backend
+
+Da hien thuc:
+
+- model, serializer, view, url va migration cho ca 6 service
+- lenh `seed_data` cho tung service
+- JWT auth cho user va phan quyen theo role
+- luong order goi sang cart, product, payment, shipping
+- migration bo sung `user_id` ownership cho `payment-service` va `shipping-service`
+- test file cho tung service trong `app/tests.py`
+
+Can xac nhan khi nghiem thu runtime:
+
+- chay `docker compose up --build` thanh cong tren may dich
+- smoke test luong secure order/payment/shipping
+- frontend build/lint trong moi truong local khong bi gioi han sandbox
+
+### Frontend
+
+Da hien thuc:
+
+- landing page va product detail
+- register / login / logout
+- cart, checkout, order list, order tracking
+- dashboard `admin`: users, products, categories, orders, shipping
+- dashboard `staff`: orders, shipping
+- proxy `/api/...` de dinh tuyen request den tung microservice
+
+Han che hien tai:
+
+- can backend dang chay thi frontend moi hoat dong day du
+- hinh anh san pham la placeholder de phuc vu demo
+- he thong o muc MVP, chua co payment gateway that, queue/event bus, hay observability hoan chinh
+
 ## Chay bang Docker Compose
 
 ```bash
 docker compose up --build
 ```
 
-Stack hien tai can dung chung cac bien bao mat sau:
+Sau khi stack len:
 
-- `JWT_SIGNING_KEY`: key ky/xac minh access token phat hanh boi `user-service`
-- `INTERNAL_SERVICE_JWT_SECRET`: secret ky/xac minh internal JWT cho service-to-service
-- `INTERNAL_SERVICE_JWT_ALGORITHM`: thuat toan internal JWT, hien la `HS256`
-- `INTERNAL_SERVICE_ISSUER`: issuer noi bo, hien la `order-service`
-- `INTERNAL_SERVICE_AUDIENCE`: bat buoc tren `cart-service`, `product-service`, `payment-service`, `shipping-service`
-- `INTERNAL_SERVICE_NAME`: bat buoc tren `order-service`
-
-Sau khi chay:
-
+- Frontend: `http://localhost:3000`
 - Product Service: `http://localhost:8001`
 - User Service: `http://localhost:8002`
 - Cart Service: `http://localhost:8003`
@@ -55,7 +98,27 @@ Sau khi chay:
 - Payment Service: `http://localhost:8005`
 - Shipping Service: `http://localhost:8006`
 
-## Migrate va seed thu cong
+Compose hien tai tu dong:
+
+- khoi tao database
+- chay `migrate`
+- chay `seed_data`
+- start cac service
+
+## Bien moi truong quan trong
+
+Stack dang dung chung cac bien bao mat sau:
+
+- `JWT_SIGNING_KEY`
+- `INTERNAL_SERVICE_JWT_SECRET`
+- `INTERNAL_SERVICE_JWT_ALGORITHM`
+- `INTERNAL_SERVICE_ISSUER`
+- `INTERNAL_SERVICE_AUDIENCE`
+- `INTERNAL_SERVICE_NAME`
+
+Neu chay bang Docker Compose, cac bien nay da duoc wire san trong [docker-compose.yml](/d:/CHAP2_E-COMMERCE/docker-compose.yml).
+
+## Chay thu cong tung phan
 
 Vi du voi `product-service`:
 
@@ -68,78 +131,29 @@ python manage.py runserver 0.0.0.0:8001
 
 Lam tuong tu cho cac service con lai voi cong tuong ung.
 
-Luu y: `payment-service` va `shipping-service` da co them migration moi de luu `user_id` ownership. Khi cap nhat code, can restart stack hoac chay lai `python manage.py migrate` cho 2 service nay truoc khi smoke test luong order.
+Frontend local:
 
-## Bien moi truong
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Moi service co file `.env.example` rieng. Doi ten thanh `.env` neu muon tuy chinh cau hinh khi chay local khong dung Docker.
-Neu chay bang Docker Compose, cac bien JWT/internal JWT da duoc wire san trong `docker-compose.yml`.
+## Luong end-to-end hien co
 
-## Endpoint chinh
+1. Dang ky hoac dang nhap qua `user-service`
+2. Xem san pham qua `product-service`
+3. Them vao gio qua `cart-service`
+4. Checkout qua `order-service`
+5. `order-service` lay gio hang, doi chieu san pham, tao payment, tao shipping
+6. Frontend theo doi `order`, `payment`, `shipping` tren man hinh order tracking
 
-### Product Service
+## Tai lieu va smoke test
 
-- `GET /products/`
-- `POST /products/`
-- `GET /products/{id}/`
-- `GET /categories/`
-- `POST /categories/`
+- Huong dan secure flow: [docs/secure-flow-smoke-test.md](/d:/CHAP2_E-COMMERCE/docs/secure-flow-smoke-test.md)
+- Script smoke test: [docs/secure-flow-smoke-test.ps1](/d:/CHAP2_E-COMMERCE/docs/secure-flow-smoke-test.ps1)
+- Tong quan UI: [docs/frontend-ui-overview.md](/d:/CHAP2_E-COMMERCE/docs/frontend-ui-overview.md)
 
-### User Service
+## Ket luan trang thai
 
-- `POST /auth/register`
-- `POST /auth/login`
-- `GET /users/`
-
-### Cart Service
-
-- `POST /cart/add`
-- `GET /cart/`
-- `PUT /cart/update`
-- `DELETE /cart/remove`
-
-### Order Service
-
-- `POST /orders/`
-- `GET /orders/`
-- `GET /orders/{id}/`
-
-### Payment Service
-
-- `GET /payment/status`
-- `GET /payment/status/{order_id}`
-
-### Shipping Service
-
-- `GET /shipping/status`
-- `GET /shipping/status/{order_id}`
-
-## Luong end-to-end
-
-1. Dang ky/dang nhap user qua `user-service`
-2. Lay danh sach san pham tu `product-service`
-3. Them san pham vao gio qua `cart-service`
-4. Tao don bang `order-service`
-5. `order-service` goi:
-   - `cart-service` de lay gio
-   - `product-service` de kiem tra gia va ton kho
-   - `payment-service` de thanh toan
-   - `shipping-service` de tao shipment khi payment thanh cong
-
-## Seed data
-
-- `product-service`: category + product + book/electronics/fashion mau
-- `user-service`: admin/staff/customer mau
-- `cart-service`: cart va cart item mau
-- `order-service`, `payment-service`, `shipping-service`: ban ghi mau de test nhanh
-
-## Ghi chu
-
-- JWT duoc phat hanh boi `user-service` bang `simplejwt`
-- `order-service` su dung synchronous REST, khong dung Kafka/RabbitMQ
-- Payment co ho tro `simulate_failure=true` de test nhanh kich ban loi
-
-## Smoke test secure flow
-
-- Script san co: `docs/secure-flow-smoke-test.ps1`
-- Huong dan: `docs/secure-flow-smoke-test.md`
+Project dang o muc co the demo duoc full flow cua mot he thong e-commerce microservices tren Docker Compose. Phan kien truc, source code va giao dien da co du; buoc tiep theo de dua sang muc on dinh hon la chay smoke test/thuc nghiem runtime tren moi truong local hoac server dich, sau do bo sung CI, monitoring va hardening cho production.

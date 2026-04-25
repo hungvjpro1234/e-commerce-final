@@ -1,41 +1,80 @@
-## Frontend Setup & Execution
+## Frontend Status
 
-The frontend has been constructed utilizing Next.js 14 and Tailwind CSS and is capable of running alongside the microservices. 
+Trang thai hien tai: `MVP UI complete`
 
-It implements an internal server-side API Gateway to route to the individual microservice ports.
+Frontend nay duoc xay dung bang Next.js 14 + Tailwind CSS va da noi voi cum microservice thong qua route proxy noi bo `/api/[...path]`.
 
-### Prerequisites (If running locally instead of Docker)
+## Da hoan thanh
 
-- Node.js 18+
+- landing page lay du lieu tu `product-service`
+- product detail theo tung loai san pham
+- dang ky, dang nhap, luu auth state
+- gio hang: xem, cap nhat so luong, xoa item
+- checkout va tao order
+- order list va order tracking
+- dashboard `admin`:
+  - users
+  - products
+  - categories
+  - orders
+  - shipping
+- dashboard `staff`:
+  - orders
+  - shipping
 
-### Environment Configuration
+## Kien truc frontend
 
-In the `frontend/` directory, create a `.env.development` file pointing to `localhost` ports if you are running the backend microservices using raw python directly on the host machine. Otherwise, `.env.production` is mapped to the internal Docker domain names naturally if running via Docker Compose.
+- Next.js App Router
+- React Query cho fetch/mutation
+- Zustand persist cho auth state phia client
+- Axios wrapper de goi `/api/...`
+- Route handler `app/api/[...path]/route.ts` dong vai tro API gateway nho
+
+Proxy hien tai da map:
+
+- `/api/auth`, `/api/users` -> `user-service`
+- `/api/products`, `/api/categories` -> `product-service`
+- `/api/cart` -> `cart-service`
+- `/api/orders` -> `order-service`
+- `/api/payment` -> `payment-service`
+- `/api/shipping` -> `shipping-service`
+
+## Dieu kien de frontend hoat dong dung
+
+- 6 backend service phai dang chay
+- bien moi truong phai tro dung toi service host/port
+- JWT dang nhap phai duoc cap boi `user-service`
+
+Neu backend khong chay, cac man hinh catalog, cart, checkout va dashboard se khong lay duoc du lieu.
+
+## Cau hinh moi truong
+
+Neu chay frontend rieng ben ngoai Docker, dung `.env.development` va tro den host local:
 
 ```env
-USER_SERVICE_URL=http://user-service:8002
-PRODUCT_SERVICE_URL=http://product-service:8001
-CART_SERVICE_URL=http://cart-service:8003
-ORDER_SERVICE_URL=http://order-service:8004
-PAYMENT_SERVICE_URL=http://payment-service:8005
-SHIPPING_SERVICE_URL=http://shipping-service:8006
+USER_SERVICE_URL=http://localhost:8002
+PRODUCT_SERVICE_URL=http://localhost:8001
+CART_SERVICE_URL=http://localhost:8003
+ORDER_SERVICE_URL=http://localhost:8004
+PAYMENT_SERVICE_URL=http://localhost:8005
+SHIPPING_SERVICE_URL=http://localhost:8006
 ```
 
-### Starting the Frontend with Docker Compose
+Neu chay bang Docker Compose, file `.env.production` dang tro den ten service trong network Docker.
 
-An added service definition `frontend` mapped to port `3000` has been appended to the root `docker-compose.yml`. 
+## Cach chay
 
-Simply execute from the root directory:
+### Cach 1: chay cung toan stack
+
+Tu root repo:
 
 ```bash
 docker compose up --build
 ```
 
-Then visit [http://localhost:3000](http://localhost:3000)
+Frontend se co tai `http://localhost:3000`.
 
-### Manual Local Startup 
-
-If you prefer to start the frontend completely independent of Docker for faster iterative UI development:
+### Cach 2: chay rieng frontend de dev UI
 
 ```bash
 cd frontend
@@ -43,9 +82,25 @@ npm install
 npm run dev
 ```
 
-The server will be hosted on [http://localhost:3000](http://localhost:3000). Ensure the other 6 Python apps are actively running so the Next.js Proxy (`/api/...`) resolves properly.
+Frontend se chay tai `http://localhost:3000`.
 
-## Important Backend Assumptions
-- We assume standard JWT responses where User Service returns `{ access: "...", user: {...} }` upon Authentication.
-- In `CartItem`, the cart response maps `product_id` which the frontend actively resolves iteratively against Product Service endpoints.
-- Due to the nature of the MVP, `product images` are simulated client-side via Unsplash utilizing deterministic seed sequences to ensure aesthetically cohesive demonstrations.
+## Ghi chu ve trang thai va gioi han
+
+- Frontend hien phuc vu tot cho demo va bao cao MVP.
+- Anh san pham dang la placeholder phuc vu trinh bay.
+- Kiem tra auth va role chu yeu dua tren token va du lieu user tra ve tu backend.
+- He thong chua co API gateway rieng, frontend dang tam dong vai tro cau noi.
+- Co luong test payment failure de kiem tra nhanh qua checkout.
+
+## Script co san
+
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
+
+## Ket luan
+
+Frontend da o muc co the trinh dien full flow cho customer, staff va admin, voi dependency chinh la backend stack phai khoi dong on dinh. Neu muc tieu la production, buoc tiep theo nen la bo sung test E2E, hoan thien xu ly loi, va tach API gateway thanh thanh phan rieng.
