@@ -13,4 +13,5 @@ dist/
 .mypy_cache/
 .coverage
 htmlcov/
-
+.frontend-git-backup/
+frontend/.git.nested-backup/
