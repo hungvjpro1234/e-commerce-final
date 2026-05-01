@@ -3,6 +3,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class InternalPaymentProcessView(APIView):
     authentication_classes = [InternalServiceAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = PaymentRequestSerializer(data=request.data)
@@ -39,6 +41,7 @@ class InternalPaymentProcessView(APIView):
 
 class PaymentStatusListView(generics.ListAPIView):
     serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Payment.objects.all().order_by("id")
@@ -53,6 +56,7 @@ class PaymentStatusListView(generics.ListAPIView):
 class PaymentStatusDetailView(generics.RetrieveAPIView):
     serializer_class = PaymentSerializer
     lookup_url_kwarg = "order_id"
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         payment = get_object_or_404(Payment.objects.order_by("-id"), order_id=self.kwargs["order_id"])
@@ -61,3 +65,10 @@ class PaymentStatusDetailView(generics.RetrieveAPIView):
         if payment.user_id != get_request_user_id(self.request):
             raise NotFound()
         return payment
+
+
+class HealthCheckView(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "payment-service", "status": "ok"})

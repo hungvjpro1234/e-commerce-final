@@ -14,8 +14,42 @@
 ## Key Screenshots / Flow
 
 1.  **Login/Register Flow**: User securely attempts to login, if no user exists, creates an account passing `first_name` and `last_name`. This hits `/auth/register` and `/auth/login`. 
-2.  **Product List**: Landing page pulls items from `/products/`. Generates Unsplash stock images as placeholders for aesthetics dynamically mapped by category.
-3.  **Product Detail**: Dynamic specs render depending on category (e.g. `Author` for books, `Warranty` for electronics).
+2.  **Product List**: Landing page pulls items from `/products/`. Placeholder imagery is selected from a product-type registry so the catalog scales beyond the original 3 categories.
+3.  **Product Detail**: Dynamic specs render from the normalized product contract (`detail_type` + `detail`) using a schema-driven registry with fallback key/value rendering.
 4.  **Cart Summary**: Updates the Cart Item via `/cart/update` and deletes via `/cart/remove`.
 5.  **Checkout Flow**: Checkout prompts for an Address and provides a specific flag (`Simulate Payment Failure`) to rigorously test the `payment-service` and `order-service` rollback mechanisms without jumping into code.
 6.  **Tracking Dashboard**: Order tracking resolves the `General Status`, `Payment Status`, and `Shipping Pipeline` from 3 different microservices dynamically using React Query mapping.
+
+## Product Data Model In The UI
+
+The frontend no longer expects product payloads like `book`, `electronics`, or `fashion` as separate nested objects. It now consumes:
+
+```json
+{
+  "id": 1,
+  "name": "Django for APIs",
+  "price": 29.99,
+  "stock": 20,
+  "category": 1,
+  "category_data": { "id": 1, "name": "Books" },
+  "detail_type": "book",
+  "detail": {
+    "author": "William S. Vincent",
+    "publisher": "WelcomeToCode",
+    "isbn": "9781735467221"
+  }
+}
+```
+
+The shared UI registry currently covers 10 product types:
+
+- `book`
+- `electronics`
+- `fashion`
+- `home-living`
+- `beauty`
+- `sports`
+- `toys`
+- `grocery`
+- `office`
+- `pet-supplies`

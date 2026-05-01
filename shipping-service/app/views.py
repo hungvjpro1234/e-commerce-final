@@ -3,6 +3,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class InternalShipmentCreateView(APIView):
     authentication_classes = [InternalServiceAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = ShipmentCreateSerializer(data=request.data)
@@ -33,6 +35,7 @@ class InternalShipmentCreateView(APIView):
 
 class ShipmentStatusListView(generics.ListAPIView):
     serializer_class = ShipmentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Shipment.objects.all().order_by("id")
@@ -47,6 +50,7 @@ class ShipmentStatusListView(generics.ListAPIView):
 class ShipmentStatusDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = ShipmentSerializer
     lookup_url_kwarg = "order_id"
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method in {"PUT", "PATCH"}:
@@ -65,3 +69,10 @@ class ShipmentStatusDetailView(generics.RetrieveUpdateAPIView):
         if not is_staff_or_admin(request):
             raise PermissionDenied("Only staff or admin can update shipping status.")
         return super().update(request, *args, **kwargs)
+
+
+class HealthCheckView(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "shipping-service", "status": "ok"})

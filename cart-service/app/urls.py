@@ -4,6 +4,7 @@ from .views import (
     AddToCartView,
     CartDetailView,
     ClearCartView,
+    HealthCheckView,
     InternalCartDetailView,
     InternalClearCartView,
     RemoveCartItemView,
@@ -11,6 +12,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("health", HealthCheckView.as_view(), name="health"),
     path("cart/add", AddToCartView.as_view(), name="cart-add"),
     path("cart/", CartDetailView.as_view(), name="cart-detail"),
     path("cart/update", UpdateCartView.as_view(), name="cart-update"),

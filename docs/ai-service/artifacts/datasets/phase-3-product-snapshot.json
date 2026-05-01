@@ -1,0 +1,206 @@
+[
+  {
+    "id": 1,
+    "name": "Django for APIs",
+    "price": 29.99,
+    "stock": 20,
+    "category": 1,
+    "category_data": {
+      "id": 1,
+      "name": "Books"
+    },
+    "detail_type": "book",
+    "detail": {
+      "isbn": "9781735467221",
+      "author": "William S. Vincent",
+      "publisher": "WelcomeToCode"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Laptop Pro 14",
+    "price": 1299.0,
+    "stock": 10,
+    "category": 2,
+    "category_data": {
+      "id": 2,
+      "name": "Electronics"
+    },
+    "detail_type": "electronics",
+    "detail": {
+      "brand": "TechBrand",
+      "model": "LP14-2026",
+      "warranty_months": 24
+    }
+  },
+  {
+    "id": 3,
+    "name": "Classic Hoodie",
+    "price": 49.5,
+    "stock": 30,
+    "category": 3,
+    "category_data": {
+      "id": 3,
+      "name": "Fashion"
+    },
+    "detail_type": "fashion",
+    "detail": {
+      "size": "L",
+      "color": "Black",
+      "material": "Cotton"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Clean Architecture",
+    "price": 34.5,
+    "stock": 14,
+    "category": 1,
+    "category_data": {
+      "id": 1,
+      "name": "Books"
+    },
+    "detail_type": "book",
+    "detail": {
+      "isbn": "9780134494166",
+      "author": "Robert C. Martin",
+      "publisher": "Prentice Hall"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Noise Cancel Earbuds",
+    "price": 149.0,
+    "stock": 35,
+    "category": 2,
+    "category_data": {
+      "id": 2,
+      "name": "Electronics"
+    },
+    "detail_type": "electronics",
+    "detail": {
+      "brand": "SoundPeak",
+      "model": "NC-E2",
+      "warranty_months": 12
+    }
+  },
+  {
+    "id": 6,
+    "name": "Oak Coffee Table",
+    "price": 219.0,
+    "stock": 8,
+    "category": 5,
+    "category_data": {
+      "id": 5,
+      "name": "Home & Living"
+    },
+    "detail_type": "home-living",
+    "detail": {
+      "room": "Living Room",
+      "material": "Oak Wood",
+      "dimensions": "100x60x42 cm"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Hydrating Serum",
+    "price": 27.0,
+    "stock": 40,
+    "category": 6,
+    "category_data": {
+      "id": 6,
+      "name": "Beauty"
+    },
+    "detail_type": "beauty",
+    "detail": {
+      "brand": "GlowLab",
+      "skin_type": "Dry",
+      "volume_ml": 30
+    }
+  },
+  {
+    "id": 8,
+    "name": "Training Basketball",
+    "price": 39.0,
+    "stock": 25,
+    "category": 7,
+    "category_data": {
+      "id": 7,
+      "name": "Sports"
+    },
+    "detail_type": "sports",
+    "detail": {
+      "brand": "CourtMax",
+      "level": "Training",
+      "sport": "Basketball"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Explorer Robot Kit",
+    "price": 59.0,
+    "stock": 18,
+    "category": 8,
+    "category_data": {
+      "id": 8,
+      "name": "Toys"
+    },
+    "detail_type": "toys",
+    "detail": {
+      "material": "ABS Plastic",
+      "age_range": "8+",
+      "battery_required": true
+    }
+  },
+  {
+    "id": 10,
+    "name": "Organic Granola",
+    "price": 8.5,
+    "stock": 60,
+    "category": 9,
+    "category_data": {
+      "id": 9,
+      "name": "Grocery"
+    },
+    "detail_type": "grocery",
+    "detail": {
+      "organic": true,
+      "expiry_days": 180,
+      "weight_grams": 500
+    }
+  },
+  {
+    "id": 11,
+    "name": "Marker Set Pro",
+    "price": 15.0,
+    "stock": 55,
+    "category": 10,
+    "category_data": {
+      "id": 10,
+      "name": "Office"
+    },
+    "detail_type": "office",
+    "detail": {
+      "brand": "WriteWell",
+      "color": "Mixed",
+      "pack_size": 12
+    }
+  },
+  {
+    "id": 12,
+    "name": "Dog Bowl Steel",
+    "price": 18.0,
+    "stock": 22,
+    "category": 11,
+    "category_data": {
+      "id": 11,
+      "name": "Pet Supplies"
+    },
+    "detail_type": "pet-supplies",
+    "detail": {
+      "size": "Medium",
+      "pet_type": "Dog",
+      "weight_grams": 450
+    }
+  }
+]

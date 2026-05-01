@@ -1,5 +1,7 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .auth import InternalServiceAuthentication, IsAdmin
 from .models import Category, Product
@@ -17,7 +19,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.select_related("category").prefetch_related("book", "electronics", "fashion").order_by("id")
+    queryset = Product.objects.select_related("category").order_by("id")
     serializer_class = ProductSerializer
 
     def get_permissions(self):
@@ -27,6 +29,14 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class InternalProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.select_related("category").prefetch_related("book", "electronics", "fashion").order_by("id")
+    queryset = Product.objects.select_related("category").order_by("id")
     serializer_class = ProductSerializer
     authentication_classes = [InternalServiceAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class HealthCheckView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "product-service", "status": "ok"})

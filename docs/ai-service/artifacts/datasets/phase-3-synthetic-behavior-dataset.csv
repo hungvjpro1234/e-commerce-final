@@ -1,0 +1,181 @@
+id,user_id,product_id,action,query_text,timestamp,category_name,detail_type,price,is_synthetic
+1,1019,,search,dog feeding accessories,2026-04-29T08:00:00+00:00,,,,True
+2,1019,12,view,,2026-04-29T08:01:00+00:00,Pet Supplies,pet-supplies,18.0,True
+3,1019,12,click,,2026-04-29T08:05:00+00:00,Pet Supplies,pet-supplies,18.0,True
+4,1019,12,add_to_cart,,2026-04-29T08:07:00+00:00,Pet Supplies,pet-supplies,18.0,True
+5,1019,12,buy,,2026-04-29T08:08:00+00:00,Pet Supplies,pet-supplies,18.0,True
+6,1002,,search,robot kit for kids,2026-04-29T08:11:00+00:00,,,,True
+7,1002,9,view,,2026-04-29T08:13:00+00:00,Toys,toys,59.0,True
+8,1002,9,click,,2026-04-29T08:14:00+00:00,Toys,toys,59.0,True
+9,1002,9,add_to_cart,,2026-04-29T08:17:00+00:00,Toys,toys,59.0,True
+10,1002,9,buy,,2026-04-29T08:21:00+00:00,Toys,toys,59.0,True
+11,1016,,search,black cotton hoodie,2026-04-29T08:23:00+00:00,,,,True
+12,1016,3,view,,2026-04-29T08:26:00+00:00,Fashion,fashion,49.5,True
+13,1016,3,click,,2026-04-29T08:28:00+00:00,Fashion,fashion,49.5,True
+14,1016,,search,oak living room furniture,2026-04-29T08:31:00+00:00,,,,True
+15,1016,6,view,,2026-04-29T08:32:00+00:00,Home & Living,home-living,219.0,True
+16,1016,6,click,,2026-04-29T08:34:00+00:00,Home & Living,home-living,219.0,True
+17,1016,6,add_to_cart,,2026-04-29T08:36:00+00:00,Home & Living,home-living,219.0,True
+18,1016,6,buy,,2026-04-29T08:39:00+00:00,Home & Living,home-living,219.0,True
+19,1023,,search,hydrating beauty serum,2026-04-29T08:41:00+00:00,,,,True
+20,1023,7,view,,2026-04-29T08:44:00+00:00,Beauty,beauty,27.0,True
+21,1023,7,click,,2026-04-29T08:47:00+00:00,Beauty,beauty,27.0,True
+22,1020,,search,oak living room furniture,2026-04-29T08:49:00+00:00,,,,True
+23,1020,6,view,,2026-04-29T08:50:00+00:00,Home & Living,home-living,219.0,True
+24,1020,6,click,,2026-04-29T08:53:00+00:00,Home & Living,home-living,219.0,True
+25,1020,6,add_to_cart,,2026-04-29T08:57:00+00:00,Home & Living,home-living,219.0,True
+26,1020,6,buy,,2026-04-29T08:59:00+00:00,Home & Living,home-living,219.0,True
+27,1012,,search,robot kit for kids,2026-04-29T09:03:00+00:00,,,,True
+28,1012,9,view,,2026-04-29T09:05:00+00:00,Toys,toys,59.0,True
+29,1012,9,click,,2026-04-29T09:06:00+00:00,Toys,toys,59.0,True
+30,1012,9,add_to_cart,,2026-04-29T09:08:00+00:00,Toys,toys,59.0,True
+31,1017,,search,dog feeding accessories,2026-04-29T09:10:00+00:00,,,,True
+32,1017,12,view,,2026-04-29T09:11:00+00:00,Pet Supplies,pet-supplies,18.0,True
+33,1017,12,click,,2026-04-29T09:15:00+00:00,Pet Supplies,pet-supplies,18.0,True
+34,1017,12,add_to_cart,,2026-04-29T09:18:00+00:00,Pet Supplies,pet-supplies,18.0,True
+35,1017,12,buy,,2026-04-29T09:20:00+00:00,Pet Supplies,pet-supplies,18.0,True
+36,1010,,search,hydrating beauty serum,2026-04-29T09:21:00+00:00,,,,True
+37,1010,7,view,,2026-04-29T09:23:00+00:00,Beauty,beauty,27.0,True
+38,1010,7,click,,2026-04-29T09:25:00+00:00,Beauty,beauty,27.0,True
+39,1010,7,add_to_cart,,2026-04-29T09:26:00+00:00,Beauty,beauty,27.0,True
+40,1010,7,buy,,2026-04-29T09:28:00+00:00,Beauty,beauty,27.0,True
+41,1000,,search,oak living room furniture,2026-04-29T09:32:00+00:00,,,,True
+42,1000,6,view,,2026-04-29T09:35:00+00:00,Home & Living,home-living,219.0,True
+43,1000,6,click,,2026-04-29T09:39:00+00:00,Home & Living,home-living,219.0,True
+44,1000,6,add_to_cart,,2026-04-29T09:42:00+00:00,Home & Living,home-living,219.0,True
+45,1000,6,buy,,2026-04-29T09:44:00+00:00,Home & Living,home-living,219.0,True
+46,1021,,search,clean architecture book,2026-04-29T09:47:00+00:00,,,,True
+47,1021,4,view,,2026-04-29T09:50:00+00:00,Books,book,34.5,True
+48,1021,4,click,,2026-04-29T09:51:00+00:00,Books,book,34.5,True
+49,1021,4,add_to_cart,,2026-04-29T09:53:00+00:00,Books,book,34.5,True
+50,1021,4,buy,,2026-04-29T09:54:00+00:00,Books,book,34.5,True
+51,1010,,search,dog feeding accessories,2026-04-29T09:57:00+00:00,,,,True
+52,1010,12,view,,2026-04-29T09:58:00+00:00,Pet Supplies,pet-supplies,18.0,True
+53,1010,12,click,,2026-04-29T10:02:00+00:00,Pet Supplies,pet-supplies,18.0,True
+54,1013,,search,dog feeding accessories,2026-04-29T10:03:00+00:00,,,,True
+55,1013,12,view,,2026-04-29T10:05:00+00:00,Pet Supplies,pet-supplies,18.0,True
+56,1013,12,click,,2026-04-29T10:08:00+00:00,Pet Supplies,pet-supplies,18.0,True
+57,1013,12,add_to_cart,,2026-04-29T10:09:00+00:00,Pet Supplies,pet-supplies,18.0,True
+58,1013,12,buy,,2026-04-29T10:11:00+00:00,Pet Supplies,pet-supplies,18.0,True
+59,1009,,search,black cotton hoodie,2026-04-29T10:14:00+00:00,,,,True
+60,1009,3,view,,2026-04-29T10:15:00+00:00,Fashion,fashion,49.5,True
+61,1009,3,click,,2026-04-29T10:18:00+00:00,Fashion,fashion,49.5,True
+62,1009,3,add_to_cart,,2026-04-29T10:21:00+00:00,Fashion,fashion,49.5,True
+63,1017,,search,dog feeding accessories,2026-04-29T10:25:00+00:00,,,,True
+64,1017,12,view,,2026-04-29T10:26:00+00:00,Pet Supplies,pet-supplies,18.0,True
+65,1017,12,click,,2026-04-29T10:30:00+00:00,Pet Supplies,pet-supplies,18.0,True
+66,1017,12,buy,,2026-04-29T10:34:00+00:00,Pet Supplies,pet-supplies,18.0,True
+67,1011,,search,clean architecture book,2026-04-29T10:36:00+00:00,,,,True
+68,1011,1,view,,2026-04-29T10:38:00+00:00,Books,book,29.99,True
+69,1011,1,click,,2026-04-29T10:39:00+00:00,Books,book,29.99,True
+70,1011,1,add_to_cart,,2026-04-29T10:41:00+00:00,Books,book,29.99,True
+71,1011,,search,robot kit for kids,2026-04-29T10:45:00+00:00,,,,True
+72,1011,9,view,,2026-04-29T10:48:00+00:00,Toys,toys,59.0,True
+73,1011,9,click,,2026-04-29T10:52:00+00:00,Toys,toys,59.0,True
+74,1011,9,buy,,2026-04-29T10:55:00+00:00,Toys,toys,59.0,True
+75,1004,,search,black cotton hoodie,2026-04-29T10:57:00+00:00,,,,True
+76,1004,3,view,,2026-04-29T11:00:00+00:00,Fashion,fashion,49.5,True
+77,1004,3,click,,2026-04-29T11:03:00+00:00,Fashion,fashion,49.5,True
+78,1004,3,add_to_cart,,2026-04-29T11:04:00+00:00,Fashion,fashion,49.5,True
+79,1004,3,buy,,2026-04-29T11:05:00+00:00,Fashion,fashion,49.5,True
+80,1013,,search,robot kit for kids,2026-04-29T11:07:00+00:00,,,,True
+81,1013,9,view,,2026-04-29T11:10:00+00:00,Toys,toys,59.0,True
+82,1013,9,click,,2026-04-29T11:11:00+00:00,Toys,toys,59.0,True
+83,1013,9,add_to_cart,,2026-04-29T11:13:00+00:00,Toys,toys,59.0,True
+84,1013,9,buy,,2026-04-29T11:17:00+00:00,Toys,toys,59.0,True
+85,1010,,search,clean architecture book,2026-04-29T11:19:00+00:00,,,,True
+86,1010,4,view,,2026-04-29T11:21:00+00:00,Books,book,34.5,True
+87,1010,4,click,,2026-04-29T11:25:00+00:00,Books,book,34.5,True
+88,1010,4,add_to_cart,,2026-04-29T11:28:00+00:00,Books,book,34.5,True
+89,1023,,search,office marker set,2026-04-29T11:31:00+00:00,,,,True
+90,1023,11,view,,2026-04-29T11:32:00+00:00,Office,office,15.0,True
+91,1023,11,click,,2026-04-29T11:34:00+00:00,Office,office,15.0,True
+92,1023,11,add_to_cart,,2026-04-29T11:36:00+00:00,Office,office,15.0,True
+93,1023,11,buy,,2026-04-29T11:40:00+00:00,Office,office,15.0,True
+94,1007,,search,wireless electronics deal,2026-04-29T11:44:00+00:00,,,,True
+95,1007,5,view,,2026-04-29T11:47:00+00:00,Electronics,electronics,149.0,True
+96,1007,5,click,,2026-04-29T11:50:00+00:00,Electronics,electronics,149.0,True
+97,1007,5,buy,,2026-04-29T11:51:00+00:00,Electronics,electronics,149.0,True
+98,1013,,search,clean architecture book,2026-04-29T11:52:00+00:00,,,,True
+99,1013,1,view,,2026-04-29T11:55:00+00:00,Books,book,29.99,True
+100,1013,1,click,,2026-04-29T11:58:00+00:00,Books,book,29.99,True
+101,1013,1,add_to_cart,,2026-04-29T12:00:00+00:00,Books,book,29.99,True
+102,1011,,search,training basketball gear,2026-04-29T12:01:00+00:00,,,,True
+103,1011,8,view,,2026-04-29T12:02:00+00:00,Sports,sports,39.0,True
+104,1011,8,click,,2026-04-29T12:05:00+00:00,Sports,sports,39.0,True
+105,1011,8,add_to_cart,,2026-04-29T12:06:00+00:00,Sports,sports,39.0,True
+106,1011,8,buy,,2026-04-29T12:09:00+00:00,Sports,sports,39.0,True
+107,1010,,search,hydrating beauty serum,2026-04-29T12:10:00+00:00,,,,True
+108,1010,7,view,,2026-04-29T12:13:00+00:00,Beauty,beauty,27.0,True
+109,1010,7,click,,2026-04-29T12:16:00+00:00,Beauty,beauty,27.0,True
+110,1010,7,add_to_cart,,2026-04-29T12:19:00+00:00,Beauty,beauty,27.0,True
+111,1010,7,buy,,2026-04-29T12:22:00+00:00,Beauty,beauty,27.0,True
+112,1021,,search,dog feeding accessories,2026-04-29T12:23:00+00:00,,,,True
+113,1021,12,view,,2026-04-29T12:25:00+00:00,Pet Supplies,pet-supplies,18.0,True
+114,1021,12,click,,2026-04-29T12:26:00+00:00,Pet Supplies,pet-supplies,18.0,True
+115,1021,12,add_to_cart,,2026-04-29T12:28:00+00:00,Pet Supplies,pet-supplies,18.0,True
+116,1015,,search,oak living room furniture,2026-04-29T12:32:00+00:00,,,,True
+117,1015,6,view,,2026-04-29T12:33:00+00:00,Home & Living,home-living,219.0,True
+118,1015,6,click,,2026-04-29T12:36:00+00:00,Home & Living,home-living,219.0,True
+119,1015,6,add_to_cart,,2026-04-29T12:40:00+00:00,Home & Living,home-living,219.0,True
+120,1005,,search,training basketball gear,2026-04-29T12:41:00+00:00,,,,True
+121,1005,8,view,,2026-04-29T12:42:00+00:00,Sports,sports,39.0,True
+122,1005,8,click,,2026-04-29T12:43:00+00:00,Sports,sports,39.0,True
+123,1005,8,add_to_cart,,2026-04-29T12:47:00+00:00,Sports,sports,39.0,True
+124,1011,,search,black cotton hoodie,2026-04-29T12:50:00+00:00,,,,True
+125,1011,3,view,,2026-04-29T12:52:00+00:00,Fashion,fashion,49.5,True
+126,1011,3,click,,2026-04-29T12:55:00+00:00,Fashion,fashion,49.5,True
+127,1011,3,add_to_cart,,2026-04-29T12:56:00+00:00,Fashion,fashion,49.5,True
+128,1009,,search,organic healthy snack,2026-04-29T12:58:00+00:00,,,,True
+129,1009,10,view,,2026-04-29T12:59:00+00:00,Grocery,grocery,8.5,True
+130,1009,10,click,,2026-04-29T13:03:00+00:00,Grocery,grocery,8.5,True
+131,1009,10,add_to_cart,,2026-04-29T13:04:00+00:00,Grocery,grocery,8.5,True
+132,1002,,search,hydrating beauty serum,2026-04-29T13:07:00+00:00,,,,True
+133,1002,7,view,,2026-04-29T13:09:00+00:00,Beauty,beauty,27.0,True
+134,1002,7,click,,2026-04-29T13:11:00+00:00,Beauty,beauty,27.0,True
+135,1002,7,add_to_cart,,2026-04-29T13:15:00+00:00,Beauty,beauty,27.0,True
+136,1002,7,buy,,2026-04-29T13:17:00+00:00,Beauty,beauty,27.0,True
+137,1011,,search,wireless electronics deal,2026-04-29T13:20:00+00:00,,,,True
+138,1011,2,view,,2026-04-29T13:21:00+00:00,Electronics,electronics,1299.0,True
+139,1011,2,click,,2026-04-29T13:23:00+00:00,Electronics,electronics,1299.0,True
+140,1011,2,buy,,2026-04-29T13:26:00+00:00,Electronics,electronics,1299.0,True
+141,1006,,search,clean architecture book,2026-04-29T13:30:00+00:00,,,,True
+142,1006,1,view,,2026-04-29T13:32:00+00:00,Books,book,29.99,True
+143,1006,1,click,,2026-04-29T13:36:00+00:00,Books,book,29.99,True
+144,1006,1,add_to_cart,,2026-04-29T13:39:00+00:00,Books,book,29.99,True
+145,1012,,search,office marker set,2026-04-29T13:41:00+00:00,,,,True
+146,1012,11,view,,2026-04-29T13:44:00+00:00,Office,office,15.0,True
+147,1012,11,click,,2026-04-29T13:47:00+00:00,Office,office,15.0,True
+148,1002,,search,wireless electronics deal,2026-04-29T13:48:00+00:00,,,,True
+149,1002,2,view,,2026-04-29T13:51:00+00:00,Electronics,electronics,1299.0,True
+150,1002,2,click,,2026-04-29T13:52:00+00:00,Electronics,electronics,1299.0,True
+151,1002,2,buy,,2026-04-29T13:53:00+00:00,Electronics,electronics,1299.0,True
+152,1021,,search,office marker set,2026-04-29T13:54:00+00:00,,,,True
+153,1021,11,view,,2026-04-29T13:56:00+00:00,Office,office,15.0,True
+154,1021,11,click,,2026-04-29T13:59:00+00:00,Office,office,15.0,True
+155,1021,11,add_to_cart,,2026-04-29T14:00:00+00:00,Office,office,15.0,True
+156,1022,,search,clean architecture book,2026-04-29T14:01:00+00:00,,,,True
+157,1022,4,view,,2026-04-29T14:02:00+00:00,Books,book,34.5,True
+158,1022,4,click,,2026-04-29T14:03:00+00:00,Books,book,34.5,True
+159,1022,4,add_to_cart,,2026-04-29T14:04:00+00:00,Books,book,34.5,True
+160,1023,,search,office marker set,2026-04-29T14:07:00+00:00,,,,True
+161,1023,11,view,,2026-04-29T14:10:00+00:00,Office,office,15.0,True
+162,1023,11,click,,2026-04-29T14:11:00+00:00,Office,office,15.0,True
+163,1023,11,add_to_cart,,2026-04-29T14:12:00+00:00,Office,office,15.0,True
+164,1023,11,buy,,2026-04-29T14:13:00+00:00,Office,office,15.0,True
+165,1003,,search,robot kit for kids,2026-04-29T14:14:00+00:00,,,,True
+166,1003,9,view,,2026-04-29T14:15:00+00:00,Toys,toys,59.0,True
+167,1003,9,click,,2026-04-29T14:17:00+00:00,Toys,toys,59.0,True
+168,1003,9,add_to_cart,,2026-04-29T14:21:00+00:00,Toys,toys,59.0,True
+169,1003,9,buy,,2026-04-29T14:24:00+00:00,Toys,toys,59.0,True
+170,1007,,search,training basketball gear,2026-04-29T14:26:00+00:00,,,,True
+171,1007,8,view,,2026-04-29T14:29:00+00:00,Sports,sports,39.0,True
+172,1007,8,click,,2026-04-29T14:32:00+00:00,Sports,sports,39.0,True
+173,1018,,search,wireless electronics deal,2026-04-29T14:34:00+00:00,,,,True
+174,1018,2,view,,2026-04-29T14:36:00+00:00,Electronics,electronics,1299.0,True
+175,1018,2,click,,2026-04-29T14:39:00+00:00,Electronics,electronics,1299.0,True
+176,1018,2,add_to_cart,,2026-04-29T14:40:00+00:00,Electronics,electronics,1299.0,True
+177,1018,2,buy,,2026-04-29T14:44:00+00:00,Electronics,electronics,1299.0,True
+178,1012,,search,clean architecture book,2026-04-29T14:46:00+00:00,,,,True
+179,1012,1,view,,2026-04-29T14:47:00+00:00,Books,book,29.99,True
+180,1012,1,click,,2026-04-29T14:51:00+00:00,Books,book,29.99,True

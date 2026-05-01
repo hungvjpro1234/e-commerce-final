@@ -1,0 +1,13 @@
+doc_id,product_id,category_id,category_name,detail_type,text
+product-1,1,1,Books,book,Django for APIs | category: Books | detail_type: book | price: 29.99 | author: William S. Vincent | isbn: 9781735467221 | publisher: WelcomeToCode
+product-2,2,2,Electronics,electronics,Laptop Pro 14 | category: Electronics | detail_type: electronics | price: 1299.0 | brand: TechBrand | model: LP14-2026 | warranty_months: 24
+product-3,3,3,Fashion,fashion,Classic Hoodie | category: Fashion | detail_type: fashion | price: 49.5 | color: Black | material: Cotton | size: L
+product-4,4,1,Books,book,Clean Architecture | category: Books | detail_type: book | price: 34.5 | author: Robert C. Martin | isbn: 9780134494166 | publisher: Prentice Hall
+product-5,5,2,Electronics,electronics,Noise Cancel Earbuds | category: Electronics | detail_type: electronics | price: 149.0 | brand: SoundPeak | model: NC-E2 | warranty_months: 12
+product-6,6,5,Home & Living,home-living,Oak Coffee Table | category: Home & Living | detail_type: home-living | price: 219.0 | dimensions: 100x60x42 cm | material: Oak Wood | room: Living Room
+product-7,7,6,Beauty,beauty,Hydrating Serum | category: Beauty | detail_type: beauty | price: 27.0 | brand: GlowLab | skin_type: Dry | volume_ml: 30
+product-8,8,7,Sports,sports,Training Basketball | category: Sports | detail_type: sports | price: 39.0 | brand: CourtMax | level: Training | sport: Basketball
+product-9,9,8,Toys,toys,Explorer Robot Kit | category: Toys | detail_type: toys | price: 59.0 | age_range: 8+ | battery_required: True | material: ABS Plastic
+product-10,10,9,Grocery,grocery,Organic Granola | category: Grocery | detail_type: grocery | price: 8.5 | expiry_days: 180 | organic: True | weight_grams: 500
+product-11,11,10,Office,office,Marker Set Pro | category: Office | detail_type: office | price: 15.0 | brand: WriteWell | color: Mixed | pack_size: 12
+product-12,12,11,Pet Supplies,pet-supplies,Dog Bowl Steel | category: Pet Supplies | detail_type: pet-supplies | price: 18.0 | pet_type: Dog | size: Medium | weight_grams: 450

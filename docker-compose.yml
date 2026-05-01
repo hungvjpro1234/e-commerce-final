@@ -4,7 +4,36 @@ x-security-env: &security-env
   INTERNAL_SERVICE_JWT_ALGORITHM: HS256
   INTERNAL_SERVICE_ISSUER: order-service
 
+x-app-network: &app-network
+  networks:
+    - ecom-network
+
 services:
+  ai-db:
+    image: postgres:16
+    container_name: ai-db
+    environment:
+      POSTGRES_DB: ai_db
+      POSTGRES_USER: ai_user
+      POSTGRES_PASSWORD: ai_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - ai_pg_data:/var/lib/postgresql/data
+    <<: *app-network
+
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: neo4j/neo4jpassword
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    <<: *app-network
+
   product-db:
     image: postgres:16
     container_name: product-db
@@ -16,6 +45,7 @@ services:
       - "5432:5432"
     volumes:
       - product_pg_data:/var/lib/postgresql/data
+    <<: *app-network
 
   user-db:
     image: mysql:8.0
@@ -30,6 +60,7 @@ services:
       - "3307:3306"
     volumes:
       - user_mysql_data:/var/lib/mysql
+    <<: *app-network
 
   cart-db:
     image: mysql:8.0
@@ -44,6 +75,7 @@ services:
       - "3308:3306"
     volumes:
       - cart_mysql_data:/var/lib/mysql
+    <<: *app-network
 
   order-db:
     image: mysql:8.0
@@ -58,6 +90,7 @@ services:
       - "3309:3306"
     volumes:
       - order_mysql_data:/var/lib/mysql
+    <<: *app-network
 
   payment-db:
     image: mysql:8.0
@@ -72,6 +105,7 @@ services:
       - "3310:3306"
     volumes:
       - payment_mysql_data:/var/lib/mysql
+    <<: *app-network
 
   shipping-db:
     image: mysql:8.0
@@ -86,6 +120,7 @@ services:
       - "3311:3306"
     volumes:
       - shipping_mysql_data:/var/lib/mysql
+    <<: *app-network
 
   product-service:
     build: ./product-service
@@ -107,6 +142,7 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8001"
+    <<: *app-network
 
   user-service:
     build: ./user-service
@@ -127,6 +163,7 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8002"
+    <<: *app-network
 
   cart-service:
     build: ./cart-service
@@ -148,6 +185,7 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8003"
+    <<: *app-network
 
   order-service:
     build: ./order-service
@@ -173,6 +211,7 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8004"
+    <<: *app-network
 
   payment-service:
     build: ./payment-service
@@ -194,6 +233,7 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8005"
+    <<: *app-network
 
   shipping-service:
     build: ./shipping-service
@@ -215,6 +255,43 @@ services:
       python manage.py migrate &&
       python manage.py seed_data &&
       python manage.py runserver 0.0.0.0:8006"
+    <<: *app-network
+
+  ai-service:
+    build: ./ai-service
+    container_name: ai-service
+    env_file:
+      - ./ai-service/.env.example
+    volumes:
+      - ./ai-service:/app
+      - ./docs/ai-service:/workspace-docs/ai-service
+    ports:
+      - "8007:8007"
+    depends_on:
+      - ai-db
+      - neo4j
+      - product-service
+      - order-service
+    command: >
+      sh -c "until python -c \"import os, socket; s = socket.socket(); s.settimeout(2); s.connect((os.environ['AI_DB_HOST'], int(os.environ['AI_DB_PORT']))); s.close()\"; do
+      echo 'Waiting for AI database...'; sleep 2; done;
+      uvicorn app.main:app --host 0.0.0.0 --port 8007"
+    <<: *app-network
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "8080:80"
+    depends_on:
+      - user-service
+      - product-service
+      - cart-service
+      - order-service
+      - payment-service
+      - shipping-service
+      - ai-service
+    <<: *app-network
 
   frontend:
     build: 
@@ -223,19 +300,28 @@ services:
     ports:
       - "3000:3000"
     depends_on:
+      - gateway
       - user-service
       - product-service
       - cart-service
       - order-service
       - payment-service
       - shipping-service
+      - ai-service
     env_file:
       - ./frontend/.env.production
+    <<: *app-network
 
 volumes:
+  ai_pg_data:
+  neo4j_data:
   product_pg_data:
   user_mysql_data:
   cart_mysql_data:
   order_mysql_data:
   payment_mysql_data:
   shipping_mysql_data:
+
+networks:
+  ecom-network:
+    driver: bridge

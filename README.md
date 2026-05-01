@@ -13,7 +13,7 @@ Trang thai hien tai: `MVP integration complete`
 
 Repo da co source cho:
 
-- `product-service`: quan ly category, product, book, electronics, fashion
+- `product-service`: quan ly category va product schema-driven voi 10 `detail_type`
 - `user-service`: dang ky, dang nhap, phan quyen `admin` / `staff` / `customer`
 - `cart-service`: them, cap nhat, xoa va xem gio hang
 - `order-service`: tao don, xem danh sach, xem chi tiet, cap nhat trang thai, dieu phoi goi sang payment va shipping
@@ -25,7 +25,7 @@ Repo da co source cho:
 
 - Moi service la mot Django project doc lap.
 - Moi service co database rieng, khong co `ForeignKey` xuyen service.
-- `product-service` dung PostgreSQL.
+- `product-service` dung PostgreSQL va luu detail san pham ngay tren `Product.detail` (`JSONField`).
 - `user-service`, `cart-service`, `order-service`, `payment-service`, `shipping-service` dung MySQL rieng.
 - Frontend su dung Next.js App Router va route `/api/[...path]` lam API gateway noi bo.
 - Xac thuc nguoi dung dung JWT cua `user-service`.
@@ -53,6 +53,9 @@ Repo da co source cho:
 Da hien thuc:
 
 - model, serializer, view, url va migration cho ca 6 service
+- `product-service` da chuyen tu 3 bang detail co dinh sang contract thong nhat:
+  - `detail_type: string`
+  - `detail: Record<string, string | number | boolean>`
 - lenh `seed_data` cho tung service
 - JWT auth cho user va phan quyen theo role
 - luong order goi sang cart, product, payment, shipping
@@ -147,6 +150,42 @@ npm run dev
 4. Checkout qua `order-service`
 5. `order-service` lay gio hang, doi chieu san pham, tao payment, tao shipping
 6. Frontend theo doi `order`, `payment`, `shipping` tren man hinh order tracking
+
+## Product catalog contract
+
+Product API public va internal hien tra ve mot shape thong nhat:
+
+```json
+{
+  "id": 1,
+  "name": "Django for APIs",
+  "price": 29.99,
+  "stock": 20,
+  "category": 1,
+  "category_data": { "id": 1, "name": "Books" },
+  "detail_type": "book",
+  "detail": {
+    "author": "William S. Vincent",
+    "publisher": "WelcomeToCode",
+    "isbn": "9781735467221"
+  }
+}
+```
+
+Danh sach `detail_type` hien tai:
+
+- `book`
+- `electronics`
+- `fashion`
+- `home-living`
+- `beauty`
+- `sports`
+- `toys`
+- `grocery`
+- `office`
+- `pet-supplies`
+
+`order-service` va `cart-service` chi phu thuoc vao cac field base nhu `id`, `price`, `stock`, nen luong mua hang khong doi sau refactor nay.
 
 ## Tai lieu va smoke test
 

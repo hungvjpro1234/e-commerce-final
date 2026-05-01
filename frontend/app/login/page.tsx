@@ -36,7 +36,7 @@ export default function LoginPage() {
       return res.data;
     },
     onSuccess: (data) => {
-      setAuth(data.user, data.access);
+      setAuth(data.user, data.access, data.refresh);
       router.push(getDefaultRouteForRole(data.user?.role));
     },
     onError: (error: any) => {

@@ -3,7 +3,9 @@ import logging
 from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .auth import get_correlation_id, get_request_user_id, is_staff_or_admin
 from .models import Order, OrderItem
@@ -17,6 +19,7 @@ logger = logging.getLogger(__name__)
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Order.objects.prefetch_related("items").order_by("id")
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -106,6 +109,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
 class OrderRetrieveView(generics.RetrieveUpdateAPIView):
     queryset = Order.objects.prefetch_related("items")
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method in {"PUT", "PATCH"}:
@@ -124,3 +128,10 @@ class OrderRetrieveView(generics.RetrieveUpdateAPIView):
         if not is_staff_or_admin(request):
             raise PermissionDenied("Only staff or admin can update order status.")
         return super().update(request, *args, **kwargs)
+
+
+class HealthCheckView(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "order-service", "status": "ok"})

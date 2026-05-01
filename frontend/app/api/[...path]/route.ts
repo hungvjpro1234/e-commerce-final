@@ -47,6 +47,7 @@ const SERVICE_MAP: Record<string, string | undefined> = {
   orders: process.env.ORDER_SERVICE_URL,
   payment: process.env.PAYMENT_SERVICE_URL,
   shipping: process.env.SHIPPING_SERVICE_URL,
+  ai: process.env.AI_SERVICE_URL,
 };
 
 const COLLECTION_PATHS_REQUIRING_SLASH = new Set([
@@ -61,12 +62,53 @@ function isPublicCatalogRequest(prefix: string, method: string) {
   return method === "GET" && (prefix === "products" || prefix === "categories");
 }
 
-function normalizeTargetPath(pathname: string) {
-  const strippedPath = pathname.replace(/^\/api/, "");
-  if (COLLECTION_PATHS_REQUIRING_SLASH.has(strippedPath)) {
-    return `${strippedPath}/`;
+function trimTrailingSlashes(value: string) {
+  return value.replace(/\/+$/, "");
+}
+
+function isGatewayApiBaseUrl(baseUrl: string) {
+  return /\/api\/?$/.test(baseUrl);
+}
+
+function buildGatewayTargetPath(pathArray: string[]) {
+  const [prefix, ...rest] = pathArray;
+  const suffix = rest.length > 0 ? `/${rest.join("/")}` : "";
+
+  switch (prefix) {
+    case "auth":
+      return `/users/auth${suffix}`;
+    case "users":
+      return `/users/users${suffix || "/"}`;
+    case "products":
+      return `/products/products${suffix || "/"}`;
+    case "categories":
+      return `/categories${suffix || "/"}`;
+    case "cart":
+      return `/cart${suffix || "/"}`;
+    case "orders":
+      return `/orders${suffix || "/"}`;
+    case "payment":
+      return `/payment${suffix || "/"}`;
+    case "shipping":
+      return `/shipping${suffix || "/"}`;
+    case "ai":
+      return `/ai${suffix || "/"}`;
+    default:
+      return `/${pathArray.join("/")}`;
   }
-  return strippedPath;
+}
+
+function normalizeTargetPath(pathArray: string[]) {
+  const [prefix, ...rest] = pathArray;
+  const normalizedPath = prefix === "ai"
+    ? `/${rest.join("/")}`
+    : `/${pathArray.join("/")}`;
+
+  if (COLLECTION_PATHS_REQUIRING_SLASH.has(normalizedPath)) {
+    return `${normalizedPath}/`;
+  }
+
+  return normalizedPath === "/" ? normalizedPath : normalizedPath.replace(/\/+$/, "");
 }
 
 async function handleProxy(req: NextRequest, { params }: { params: { path: string[] } }) {
@@ -83,9 +125,12 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
     return new Response(`Service not found for /${prefix}`, { status: 404 });
   }
 
-  const targetPath = normalizeTargetPath(req.nextUrl.pathname);
+  const normalizedBaseUrl = trimTrailingSlashes(baseUrl);
+  const targetPath = isGatewayApiBaseUrl(baseUrl)
+    ? buildGatewayTargetPath(pathArray)
+    : normalizeTargetPath(pathArray);
   const searchParams = req.nextUrl.search;
-  const targetUrl = `${baseUrl}${targetPath}${searchParams}`;
+  const targetUrl = `${normalizedBaseUrl}${targetPath}${searchParams}`;
 
   try {
     const headers = new Headers(req.headers);

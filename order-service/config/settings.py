@@ -97,3 +97,26 @@ CART_SERVICE_URL = os.getenv("CART_SERVICE_URL", "http://localhost:8003")
 PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://localhost:8001")
 PAYMENT_SERVICE_URL = os.getenv("PAYMENT_SERVICE_URL", "http://localhost:8005")
 SHIPPING_SERVICE_URL = os.getenv("SHIPPING_SERVICE_URL", "http://localhost:8006")
+SERVICE_CLIENT_TIMEOUT_SECONDS = int(os.getenv("SERVICE_CLIENT_TIMEOUT_SECONDS", "5"))
+SERVICE_CLIENT_GET_RETRIES = int(os.getenv("SERVICE_CLIENT_GET_RETRIES", "2"))
+SERVICE_CLIENT_DELETE_RETRIES = int(os.getenv("SERVICE_CLIENT_DELETE_RETRIES", "2"))
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s %(levelname)s [%(name)s] %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.getenv("LOG_LEVEL", "INFO"),
+    },
+}

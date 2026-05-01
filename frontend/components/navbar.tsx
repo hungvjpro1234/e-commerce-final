@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, LogOut, Package } from "lucide-react";
+import { ShoppingCart, LogOut, Package, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 import { ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/lib/auth";
 import { Button } from "./ui/button";
@@ -27,6 +27,10 @@ export function Navbar() {
           <nav className="hidden md:flex gap-6">
             <Link href="/" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
               Products
+            </Link>
+            <Link href="/chatbot" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+              <Sparkles className="h-4 w-4" />
+              AI Assistant
             </Link>
             {user?.role === ROLE_CUSTOMER && (
               <Link href="/orders" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">

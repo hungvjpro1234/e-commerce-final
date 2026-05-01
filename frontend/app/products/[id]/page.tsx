@@ -5,12 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { Product } from "@/types";
 import { useAuthStore } from "@/lib/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Minus, Plus, ShoppingCart, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { PRODUCT_TYPE_CONFIG, getProductImageQuery, toDisplayLabel } from "@/lib/product-types";
+import { trackBehaviorEvent } from "@/lib/ai";
 
 function formatMoney(value: unknown) {
   const numericValue = typeof value === "number" ? value : Number(value);
@@ -44,6 +45,11 @@ export default function ProductDetailPage() {
     },
     onSuccess: () => {
       setAddMsg("Added to cart successfully!");
+      void trackBehaviorEvent({
+        userId: user?.id,
+        action: "add_to_cart",
+        productId: product?.id,
+      });
       setTimeout(() => setAddMsg(""), 3000);
     },
     onError: () => {
@@ -54,6 +60,18 @@ export default function ProductDetailPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    void trackBehaviorEvent({
+      userId: user?.id,
+      action: "view",
+      productId: product.id,
+    });
+  }, [product, user?.id]);
 
   if (isLoading) {
     return (
@@ -82,12 +100,21 @@ export default function ProductDetailPage() {
     );
   }
 
-  const catName = product.category_data?.name.toLowerCase() || "";
-  let query = "product";
-  if (catName.includes("book")) query = "books";
-  if (catName.includes("electronic") || catName.includes("tech")) query = "electronics";
-  if (catName.includes("fashion") || catName.includes("clothes")) query = "fashion";
-  const imgSrc = `https://picsum.photos/seed/${product.id}/800/800`;
+  const productTypeConfig = PRODUCT_TYPE_CONFIG[product.detail_type];
+  const imageQuery = getProductImageQuery(product.detail_type, product.category_data?.name);
+  const specEntries = productTypeConfig
+    ? productTypeConfig.fields
+        .filter((field) => product.detail[field.name] !== undefined)
+        .map((field) => ({
+          key: field.name,
+          label: field.label,
+          value: field.format ? field.format(product.detail[field.name]) : String(product.detail[field.name]),
+        }))
+    : Object.entries(product.detail || {}).map(([key, value]) => ({
+        key,
+        label: toDisplayLabel(key),
+        value: String(value),
+      }));
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -102,7 +129,7 @@ export default function ProductDetailPage() {
           <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-secondary/50 -z-10">
             <span className="text-6xl font-bold opacity-20">{product.name[0]}</span>
           </div>
-          <img src={imgSrc} alt={product.name} className="object-cover w-full h-full shadow-inner" />
+          <img src={`https://picsum.photos/seed/${product.id}-${imageQuery}/800/800`} alt={product.name} className="object-cover w-full h-full shadow-inner" />
         </div>
 
         {/* Right: Details */}
@@ -112,7 +139,7 @@ export default function ProductDetailPage() {
               <Badge variant="secondary">{product.category_data.name}</Badge>
             )}
             {product.detail_type && (
-              <Badge variant="outline" className="capitalize">{product.detail_type}</Badge>
+              <Badge variant="outline">{productTypeConfig?.label || product.detail_type}</Badge>
             )}
           </div>
           
@@ -128,25 +155,12 @@ export default function ProductDetailPage() {
                 <dd className="font-medium">{product.stock} units</dd>
               </div>
 
-              {product.book && (
-                <>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Author</dt><dd className="font-medium">{product.book.author}</dd></div>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Publisher</dt><dd className="font-medium">{product.book.publisher}</dd></div>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">ISBN</dt><dd className="font-medium">{product.book.isbn}</dd></div>
-                </>
-              )}
-              {product.electronics && (
-                <>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Brand</dt><dd className="font-medium">{product.electronics.brand}</dd></div>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Warranty</dt><dd className="font-medium">{product.electronics.warranty} months</dd></div>
-                </>
-              )}
-              {product.fashion && (
-                <>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Size</dt><dd className="font-medium uppercase">{product.fashion.size}</dd></div>
-                  <div className="flex flex-col"><dt className="text-muted-foreground">Color</dt><dd className="font-medium capitalize">{product.fashion.color}</dd></div>
-                </>
-              )}
+              {specEntries.map((entry) => (
+                <div key={entry.key} className="flex flex-col">
+                  <dt className="text-muted-foreground">{entry.label}</dt>
+                  <dd className="font-medium">{entry.value}</dd>
+                </div>
+              ))}
             </dl>
           </div>
 

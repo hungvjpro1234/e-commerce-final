@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { ManagementShell } from "@/components/management-shell";
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Product, Category, ProductFormValues } from "@/types";
 import { formatMoney } from "@/lib/admin";
+import { PRODUCT_TYPE_CONFIG, PRODUCT_TYPE_OPTIONS, getDetailDraft, ProductDetailValue } from "@/lib/product-types";
 
 const adminNav = [
   { href: "/admin", label: "Overview", description: "Admin landing page and quick links." },
@@ -26,28 +27,8 @@ const defaultForm: ProductFormValues = {
   stock: 0,
   category: 0,
   detail_type: "book",
-  detail: { author: "", publisher: "", isbn: "" },
+  detail: getDetailDraft("book"),
 };
-
-function getDetailDraft(type: ProductFormValues["detail_type"], product?: Product): Record<string, string | number> {
-  if (type === "book") {
-    return {
-      author: product?.book?.author || "",
-      publisher: product?.book?.publisher || "",
-      isbn: product?.book?.isbn || "",
-    };
-  }
-  if (type === "electronics") {
-    return {
-      brand: product?.electronics?.brand || "",
-      warranty: product?.electronics?.warranty || 12,
-    };
-  }
-  return {
-    size: product?.fashion?.size || "",
-    color: product?.fashion?.color || "",
-  };
-}
 
 export default function AdminProductsPage() {
   const queryClient = useQueryClient();
@@ -83,11 +64,17 @@ export default function AdminProductsPage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-products"] }),
   });
 
-  const detailFields = useMemo(() => {
-    if (form.detail_type === "book") return ["author", "publisher", "isbn"];
-    if (form.detail_type === "electronics") return ["brand", "warranty"];
-    return ["size", "color"];
-  }, [form.detail_type]);
+  const detailConfig = PRODUCT_TYPE_CONFIG[form.detail_type];
+
+  function setDetailField(name: string, value: ProductDetailValue) {
+    setForm({
+      ...form,
+      detail: {
+        ...form.detail,
+        [name]: value,
+      },
+    });
+  }
 
   return (
     <ManagementShell
@@ -136,32 +123,45 @@ export default function AdminProductsPage() {
                 setForm({
                   ...form,
                   detail_type: e.target.value as ProductFormValues["detail_type"],
-                  detail: getDetailDraft(e.target.value as ProductFormValues["detail_type"], editingProduct || undefined),
+                  detail: getDetailDraft(
+                    e.target.value as ProductFormValues["detail_type"],
+                    editingProduct?.detail
+                  ),
                 })
               }
             >
-              <option value="book">Book</option>
-              <option value="electronics">Electronics</option>
-              <option value="fashion">Fashion</option>
+              {PRODUCT_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
             <div className="grid gap-4">
-              {detailFields.map((field) => (
-                <Input
-                  key={field}
-                  type={field === "warranty" ? "number" : "text"}
-                  value={String(form.detail[field] ?? "")}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      detail: {
-                        ...form.detail,
-                        [field]: field === "warranty" ? Number(e.target.value) : e.target.value,
-                      },
-                    })
-                  }
-                  placeholder={field}
-                />
-              ))}
+              {detailConfig?.fields.map((field) =>
+                field.adminInput === "checkbox" ? (
+                  <label key={field.name} className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(form.detail[field.name])}
+                      onChange={(e) => setDetailField(field.name, e.target.checked)}
+                    />
+                    <span>{field.label}</span>
+                  </label>
+                ) : (
+                  <Input
+                    key={field.name}
+                    type={field.adminInput || "text"}
+                    value={String(form.detail[field.name] ?? "")}
+                    onChange={(e) =>
+                      setDetailField(
+                        field.name,
+                        field.type === "number" ? Number(e.target.value) : e.target.value
+                      )
+                    }
+                    placeholder={field.label}
+                  />
+                )
+              )}
             </div>
             <div className="flex gap-2">
               <Button
@@ -201,14 +201,14 @@ export default function AdminProductsPage() {
                       variant="outline"
                       onClick={() => {
                         setEditingProduct(product);
-                        const detailType = product.book ? "book" : product.electronics ? "electronics" : "fashion";
+                        const detailType = product.detail_type;
                         setForm({
                           name: product.name,
                           price: product.price,
                           stock: product.stock,
                           category: product.category,
                           detail_type: detailType,
-                          detail: getDetailDraft(detailType, product),
+                          detail: getDetailDraft(detailType, product.detail),
                         });
                       }}
                     >

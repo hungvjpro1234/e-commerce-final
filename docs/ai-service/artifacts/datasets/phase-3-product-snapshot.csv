@@ -1,0 +1,13 @@
+id,name,price,stock,category_id,category_name,detail_type,detail_json
+1,Django for APIs,29.99,20,1,Books,book,"{""author"": ""William S. Vincent"", ""isbn"": ""9781735467221"", ""publisher"": ""WelcomeToCode""}"
+2,Laptop Pro 14,1299.0,10,2,Electronics,electronics,"{""brand"": ""TechBrand"", ""model"": ""LP14-2026"", ""warranty_months"": 24}"
+3,Classic Hoodie,49.5,30,3,Fashion,fashion,"{""color"": ""Black"", ""material"": ""Cotton"", ""size"": ""L""}"
+4,Clean Architecture,34.5,14,1,Books,book,"{""author"": ""Robert C. Martin"", ""isbn"": ""9780134494166"", ""publisher"": ""Prentice Hall""}"
+5,Noise Cancel Earbuds,149.0,35,2,Electronics,electronics,"{""brand"": ""SoundPeak"", ""model"": ""NC-E2"", ""warranty_months"": 12}"
+6,Oak Coffee Table,219.0,8,5,Home & Living,home-living,"{""dimensions"": ""100x60x42 cm"", ""material"": ""Oak Wood"", ""room"": ""Living Room""}"
+7,Hydrating Serum,27.0,40,6,Beauty,beauty,"{""brand"": ""GlowLab"", ""skin_type"": ""Dry"", ""volume_ml"": 30}"
+8,Training Basketball,39.0,25,7,Sports,sports,"{""brand"": ""CourtMax"", ""level"": ""Training"", ""sport"": ""Basketball""}"
+9,Explorer Robot Kit,59.0,18,8,Toys,toys,"{""age_range"": ""8+"", ""battery_required"": true, ""material"": ""ABS Plastic""}"
+10,Organic Granola,8.5,60,9,Grocery,grocery,"{""expiry_days"": 180, ""organic"": true, ""weight_grams"": 500}"
+11,Marker Set Pro,15.0,55,10,Office,office,"{""brand"": ""WriteWell"", ""color"": ""Mixed"", ""pack_size"": 12}"
+12,Dog Bowl Steel,18.0,22,11,Pet Supplies,pet-supplies,"{""pet_type"": ""Dog"", ""size"": ""Medium"", ""weight_grams"": 450}"

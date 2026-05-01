@@ -1,0 +1,42 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # This is a skeleton monitoring configuration for Chapter 4.
+  # The current stack exposes health endpoints broadly, but not
+  # Prometheus-native metrics endpoints across every service yet.
+  #
+  # These placeholder jobs document the intended monitoring topology
+  # and provide a stable home for later metrics work.
+  - job_name: gateway
+    static_configs:
+      - targets: ["gateway:80"]
+
+  - job_name: user-service
+    static_configs:
+      - targets: ["user-service:8002"]
+
+  - job_name: product-service
+    static_configs:
+      - targets: ["product-service:8001"]
+
+  - job_name: cart-service
+    static_configs:
+      - targets: ["cart-service:8003"]
+
+  - job_name: order-service
+    static_configs:
+      - targets: ["order-service:8004"]
+
+  - job_name: payment-service
+    static_configs:
+      - targets: ["payment-service:8005"]
+
+  - job_name: shipping-service
+    static_configs:
+      - targets: ["shipping-service:8006"]
+
+  - job_name: ai-service
+    static_configs:
+      - targets: ["ai-service:8007"]

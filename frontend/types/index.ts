@@ -1,22 +1,8 @@
+import type { ProductDetailType, ProductDetailValue } from "@/lib/product-types";
+
 export interface Category {
   id: number;
   name: string;
-}
-
-export interface BookDetail {
-  author: string;
-  publisher: string;
-  isbn: string;
-}
-
-export interface ElectronicsDetail {
-  brand: string;
-  warranty: number;
-}
-
-export interface FashionDetail {
-  size: string;
-  color: string;
 }
 
 export interface Product {
@@ -26,10 +12,8 @@ export interface Product {
   stock: number;
   category: number;
   category_data?: Category;
-  detail_type?: "book" | "electronics" | "fashion";
-  book?: BookDetail;
-  electronics?: ElectronicsDetail;
-  fashion?: FashionDetail;
+  detail_type: ProductDetailType | string;
+  detail: Record<string, ProductDetailValue>;
 }
 
 export interface CartItem {
@@ -51,6 +35,51 @@ export interface UserRecord {
   role: string;
   first_name: string;
   last_name: string;
+}
+
+export type BehaviorAction = "view" | "click" | "search" | "add_to_cart" | "buy";
+
+export interface BehaviorEventPayload {
+  user_id: number;
+  action: BehaviorAction;
+  product_id?: number;
+  query_text?: string;
+}
+
+export interface RecommendationItem {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  detail_type: string;
+  score: number;
+  reason: string;
+  source_scores: Record<string, number>;
+}
+
+export interface RecommendationResponse {
+  user_id: number;
+  query?: string | null;
+  total: number;
+  items: RecommendationItem[];
+  sources_used: string[];
+}
+
+export interface ChatbotProductSuggestion {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  detail_type: string;
+  score: number;
+  reason: string;
+}
+
+export interface ChatbotResponse {
+  answer: string;
+  products: ChatbotProductSuggestion[];
+  retrieved_context: string[];
+  query_type: string;
 }
 
 export interface Order {
@@ -82,8 +111,8 @@ export interface ProductFormValues {
   price: number;
   stock: number;
   category: number;
-  detail_type: "book" | "electronics" | "fashion";
-  detail: Record<string, string | number>;
+  detail_type: ProductDetailType | string;
+  detail: Record<string, ProductDetailValue>;
 }
 
 export interface CategoryFormValues {

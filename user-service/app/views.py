@@ -22,6 +22,13 @@ class LoginView(APIView):
         return Response(serializer.validated_data)
 
 
+class HealthCheckView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "user-service", "status": "ok"})
+
+
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
     permission_classes = [IsAdmin]

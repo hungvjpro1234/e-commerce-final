@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { Cart } from "@/types";
 import { ArrowRight, Lock } from "lucide-react";
+import { trackBehaviorEvent } from "@/lib/ai";
 
 const checkoutSchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
@@ -49,7 +50,16 @@ export default function CheckoutPage() {
       const res = await api.post("/orders", data);
       return res.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      await Promise.all(
+        (cart?.items || []).map((item) =>
+          trackBehaviorEvent({
+            userId: user?.id,
+            action: "buy",
+            productId: item.product_id,
+          }),
+        ),
+      );
       queryClient.invalidateQueries({ queryKey: ["cart", user?.id] });
       router.push(`/orders/${data.id}`);
     },

@@ -5,21 +5,27 @@ import { Product } from "@/types";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { getProductImageQuery } from "@/lib/product-types";
+import { useAuthStore } from "@/lib/store";
+import { trackBehaviorEvent } from "@/lib/ai";
 
 export function ProductCard({ product }: { product: Product }) {
-  // Determine an appropriate unsplash placeholder based on category name
-  const catName = product.category_data?.name.toLowerCase() || "";
-  let query = "product";
-  if (catName.includes("book")) query = "books";
-  if (catName.includes("electronic") || catName.includes("tech")) query = "electronics";
-  if (catName.includes("fashion") || catName.includes("clothes")) query = "fashion";
+  const { user } = useAuthStore();
+  const imageQuery = getProductImageQuery(product.detail_type, product.category_data?.name);
+  const seedBase = `${product.id}-${imageQuery}`;
+  const imgSrc = `https://picsum.photos/seed/${seedBase}/400/300`;
 
-  // Use a predictable pseudo-random image to avoid layout shifts if it re-renders
-  const imgSrc = `https://picsum.photos/seed/${product.id + catName.charCodeAt(0)}/400/300`;
+  const handleProductClick = () => {
+    void trackBehaviorEvent({
+      userId: user?.id,
+      action: "click",
+      productId: product.id,
+    });
+  };
 
   return (
     <Card className="overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300">
-      <Link href={`/products/${product.id}`} className="block relative aspect-video overflow-hidden bg-muted">
+      <Link href={`/products/${product.id}`} className="block relative aspect-video overflow-hidden bg-muted" onClick={handleProductClick}>
         {/* Fallback pattern for when Unsplash resolves */}
         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-secondary/50">
           <span className="text-xl font-bold opacity-30">{product.name[0]}</span>
@@ -33,7 +39,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
       <CardContent className="p-4 flex-1">
         <div className="flex justify-between items-start gap-2 mb-2">
-          <Link href={`/products/${product.id}`} className="font-semibold line-clamp-2 hover:text-primary transition-colors">
+          <Link href={`/products/${product.id}`} className="font-semibold line-clamp-2 hover:text-primary transition-colors" onClick={handleProductClick}>
             {product.name}
           </Link>
           <span className="font-bold whitespace-nowrap text-lg text-primary">${product.price.toFixed(2)}</span>
@@ -51,9 +57,9 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Link href={`/products/${product.id}`} className="w-full">
-          <Button variant="outline" className="w-full">View Details</Button>
-        </Link>
+        <Button asChild variant="outline" className="w-full">
+          <Link href={`/products/${product.id}`} onClick={handleProductClick}>View Details</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

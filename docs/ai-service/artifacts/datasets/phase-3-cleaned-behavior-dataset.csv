@@ -1,0 +1,14 @@
+id,user_id,product_id,action,query_text,timestamp,category_name,detail_type,price,is_synthetic
+1,1,1,view,,2026-04-28T09:00:00+00:00,Books,book,29.99,False
+2,1,1,click,,2026-04-28T09:01:00+00:00,Books,book,29.99,False
+3,1,1,add_to_cart,,2026-04-28T09:02:00+00:00,Books,book,29.99,False
+4,1,1,buy,,2026-04-28T09:10:00+00:00,Books,book,29.99,False
+5,2,,search,wireless headphones,2026-04-28T10:00:00+00:00,,,,False
+6,2,2,view,,2026-04-28T10:01:00+00:00,Electronics,electronics,1299.0,False
+7,2,2,click,,2026-04-28T10:02:00+00:00,Electronics,electronics,1299.0,False
+8,2,2,add_to_cart,,2026-04-28T10:03:00+00:00,Electronics,electronics,1299.0,False
+9,3,,search,organic snacks,2026-04-28T11:00:00+00:00,,,,False
+10,3,8,view,,2026-04-28T11:02:00+00:00,Sports,sports,39.0,False
+11,3,8,click,,2026-04-28T11:03:00+00:00,Sports,sports,39.0,False
+12,3,8,buy,,2026-04-28T11:09:00+00:00,Sports,sports,39.0,False
+13,4,3,view,,2026-04-28T12:45:00+00:00,Fashion,fashion,49.5,False

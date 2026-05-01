@@ -88,3 +88,23 @@ INTERNAL_SERVICE_AUDIENCE = os.getenv("INTERNAL_SERVICE_AUDIENCE", "product-serv
 SIMPLE_JWT = {
     "SIGNING_KEY": JWT_SIGNING_KEY,
 }
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s %(levelname)s [%(name)s] %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.getenv("LOG_LEVEL", "INFO"),
+    },
+}

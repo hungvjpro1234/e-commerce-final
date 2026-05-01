@@ -79,6 +79,7 @@ class ClearCartView(APIView):
 class InternalCartDetailView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
     authentication_classes = [InternalServiceAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return get_object_or_404(Cart.objects.prefetch_related("items"), user_id=self.kwargs["user_id"])
@@ -86,8 +87,16 @@ class InternalCartDetailView(generics.RetrieveAPIView):
 
 class InternalClearCartView(APIView):
     authentication_classes = [InternalServiceAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         cart = get_object_or_404(Cart, user_id=self.kwargs["user_id"])
         cart.items.all().delete()
         return Response({"detail": "Cart cleared."}, status=status.HTTP_200_OK)
+
+
+class HealthCheckView(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        return Response({"service": "cart-service", "status": "ok"})

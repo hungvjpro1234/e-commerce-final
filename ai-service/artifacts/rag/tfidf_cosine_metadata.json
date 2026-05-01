@@ -1,0 +1,10 @@
+{
+  "method": "tfidf-cosine",
+  "document_count": 12,
+  "generated_at": "2026-04-30T02:01:04Z",
+  "build_time_ms": 13.5,
+  "sample_queries": [
+    "laptop work"
+  ],
+  "average_latency_ms": 0.0419
+}
