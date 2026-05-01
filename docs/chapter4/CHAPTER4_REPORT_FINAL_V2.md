@@ -8,11 +8,6 @@ Trong bối cảnh phát triển hệ thương mại điện tử phân tán, Ch
 
 Mô hình triển khai hiện hành gồm các service: `user-service`, `product-service`, `cart-service`, `order-service`, `payment-service`, `shipping-service`, `ai-service`, cùng `gateway` và `frontend`. Trong cấu trúc này, gateway Nginx giữ vai trò điểm vào tập trung cho API; frontend đảm nhiệm lớp trình bày; các service còn lại chịu trách nhiệm theo miền nghiệp vụ độc lập. Sự kế thừa từ Chương 3 được thể hiện ở việc `ai-service` không đứng ngoài hệ thống mà được định tuyến cùng các API nghiệp vụ qua cùng một entry point. Đồng thời, phạm vi catalog cũng phản ánh đúng mở rộng thực tế: `product-service` đang vận hành với 10 nhóm loại sản phẩm trong `product-service/app/product_types.py`, thay vì mức mô phỏng tối giản.
 
-**File:** `product-service/app/product_types.py`  
-**Khối mã:** `PRODUCT_TYPE_SCHEMAS`  
-**Dòng:** 1-82  
-**Mục đích:** thể hiện trực tiếp độ rộng domain catalog ở triển khai thật
-
 ```python
 PRODUCT_TYPE_SCHEMAS = {
     "book": {...},
@@ -28,6 +23,8 @@ PRODUCT_TYPE_SCHEMAS = {
 }
 ```
 
+Trích từ `product-service/app/product_types.py`. Đoạn khai báo này cho thấy độ rộng domain catalog ở triển khai thực, qua đó củng cố lập luận rằng hệ thống không dừng ở mức mô phỏng tối giản.
+
 Sự nhất quán này còn được phản ánh ở lớp triển khai runtime: `docker-compose.yml` định nghĩa đầy đủ service, cơ sở dữ liệu, mạng nội bộ; `docs/chapter4/logs/compose-ps.txt` và `docs/chapter4/logs/network-inspect.json` cho thấy toàn bộ container vận hành trên cùng topology; nhóm ảnh giao diện như `docs/chapter4/screenshots/storefront-home.png`, `docs/chapter4/screenshots/customer-storefront-fixed.png` và `docs/chapter4/screenshots/ai-recommend-api.png` cho thấy hệ thống được sử dụng như một nền tảng thống nhất thay vì các module rời rạc.
 
 | Thành phần | Vai trò | CSDL chính | Đầu vào/đầu ra nổi bật |
@@ -41,6 +38,37 @@ Sự nhất quán này còn được phản ánh ở lớp triển khai runtime:
 | `shipping-service` | Tạo và theo dõi vận chuyển | MySQL `shipping_db` | `/shipping/*`, `/internal/shipping/*`, `/health` |
 | `ai-service` | Recommendation, chatbot, behavior, graph, RAG | PostgreSQL `ai_db` + Neo4j | `/recommend`, `/chatbot`, `/behavior/*`, `/graph/*`, `/rag/*`, `/health` |
 | `frontend` | Lớp tương tác người dùng theo vai trò khách hàng/nhân viên/admin | Không sở hữu business DB | Trang mua sắm, quản trị user, theo dõi đơn, chatbot |
+
+Để làm rõ cách các lớp trong hệ thống liên kết với nhau ở mức triển khai tích hợp, sơ đồ dưới đây mô tả luồng truy cập chính từ client đến gateway, các service nghiệp vụ và các kho dữ liệu tương ứng.
+
+```mermaid
+flowchart TB
+    U[Customer Browser] --> FE[Frontend Next.js]
+    A[Admin/Staff Browser] --> FE
+    FE --> GW[Gateway Nginx]
+
+    GW --> US[user-service]
+    GW --> PS[product-service]
+    GW --> CS[cart-service]
+    GW --> OS[order-service]
+    GW --> AIS[ai-service]
+
+    OS --> PAY[payment-service]
+    OS --> SHIP[shipping-service]
+    OS --> CS
+    OS --> PS
+
+    US --> UDB[(MySQL user_db)]
+    PS --> PDB[(PostgreSQL product_db)]
+    CS --> CDB[(MySQL cart_db)]
+    OS --> ODB[(MySQL order_db)]
+    PAY --> PAYDB[(MySQL payment_db)]
+    SHIP --> SDB[(MySQL shipping_db)]
+    AIS --> AIDB[(PostgreSQL ai_db)]
+    AIS --> NEO[(Neo4j)]
+```
+
+Sơ đồ cho thấy gateway là điểm hội tụ hợp đồng truy cập, trong khi `order-service` giữ vai trò điều phối checkout xuyên miền. Cách tổ chức này phù hợp với lập luận kiến trúc ở Chương 4: tách biên nghiệp vụ rõ ràng nhưng vẫn duy trì được một trục vận hành thống nhất.
 
 ### 4.1.2 Nguyên tắc
 
@@ -62,11 +90,6 @@ Sự liên kết Chương 2 -> Chương 3 -> Chương 4 vì vậy không chỉ m
 
 `user-service` giữ vai trò identity boundary: service này phát JWT, gắn claim vai trò và điều khiển lớp quản trị người dùng. `product-service` là catalog boundary, đồng thời là nguồn ngữ cảnh quan trọng cho AI. `cart-service` duy trì trạng thái tạm thời của hành vi mua sắm; `order-service` là orchestration boundary, điều phối các bước tạo đơn, thanh toán, vận chuyển. `payment-service` và `shipping-service` được giữ riêng để tách biệt vòng đời giao dịch tài chính và logistics. `ai-service` mở rộng hệ thống theo hướng tư vấn, nhưng vẫn dựa trên dữ liệu sản phẩm và hành vi người dùng thực của nền tảng.
 
-**File:** `ai-service/app/main.py`  
-**Khối mã:** đăng ký router của AI service  
-**Dòng:** 37-42  
-**Mục đích:** làm rõ AI được triển khai như một API service online trong kiến trúc chung
-
 ```python
 app.include_router(health_router)
 app.include_router(behavior_router)
@@ -75,6 +98,8 @@ app.include_router(rag_router)
 app.include_router(recommend_router)
 app.include_router(chatbot_router)
 ```
+
+Trích từ `ai-service/app/main.py`. Cách đăng ký router theo module cho thấy AI được triển khai như một API service online thực thụ trong cùng kiến trúc, thay vì một thành phần demo tách rời.
 
 Đề bài có nhắc đến khả năng tồn tại `notification-service`; trong triển khai thực tế chưa có service này như một biên độc lập. Đây là lựa chọn phạm vi hợp lý trong đồ án hiện tại: ưu tiên hoàn chỉnh checkout, auth, gateway và AI integration trước khi mở thêm domain giao tiếp hậu giao dịch.
 
@@ -146,11 +171,6 @@ Những vai trò trên được phản ánh cả ở cấu hình lẫn vận hà
 
 ### 4.3.2 Cấu hình mẫu
 
-**File:** `gateway/nginx.conf`  
-**Khối mã:** internal-route guard + user auth route + ai route  
-**Dòng:** 93-106, 223-232  
-**Mục đích:** thể hiện đồng thời policy bảo vệ và policy định tuyến
-
 ```nginx
 location ~ ^/api/(products|cart|orders|payments|shipping|ai)/internal/ {
     default_type application/json;
@@ -172,6 +192,8 @@ location /api/ai/ {
 }
 ```
 
+Trích từ `gateway/nginx.conf`. Đoạn cấu hình thể hiện đồng thời hai lớp chính sách: bảo vệ route nội bộ và định tuyến API công khai, từ đó làm rõ vai trò gateway như một lớp kiểm soát trung tâm.
+
 Đoạn mã trên cho thấy kiến trúc không đánh đổi bảo mật để lấy sự tiện lợi định tuyến. Từ góc nhìn thiết kế hệ thống, việc ghép policy “cho phép route công khai” và policy “cấm route nội bộ” trong cùng một lớp ingress giúp giảm sai lệch cấu hình giữa các service downstream, đồng thời tăng khả năng kiểm soát nhất quán.
 
 ## 4.4 Authentication (JWT)
@@ -181,11 +203,6 @@ location /api/ai/ {
 Bài toán xác thực trong hệ phân tán là bài toán cân bằng giữa tính độc lập của service và tính nhất quán danh tính người dùng. Hệ thống chọn JWT vì token này hỗ trợ truyền danh tính theo kiểu stateless, giảm phụ thuộc truy vấn đồng bộ tới identity provider trong từng request.
 
 ### 4.4.2 Cấu hình
-
-**File:** `user-service/app/serializers.py`  
-**Khối mã:** `LoginSerializer.get_token`  
-**Dòng:** 52-59  
-**Mục đích:** gắn claim vai trò và danh tính vào access token
 
 ```python
 class LoginSerializer(TokenObtainPairSerializer):
@@ -198,10 +215,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         return token
 ```
 
-**File:** `user-service/app/views.py`  
-**Khối mã:** `UserListView`  
-**Dòng:** 32-35  
-**Mục đích:** enforce RBAC tại route quản trị
+Trích từ `user-service/app/serializers.py`. Việc bổ sung `role` và `user_id` vào JWT là nền tảng để downstream service thực thi phân quyền theo ngữ cảnh nghiệp vụ.
 
 ```python
 class UserListView(generics.ListCreateAPIView):
@@ -209,9 +223,37 @@ class UserListView(generics.ListCreateAPIView):
     permission_classes = [IsAdmin]
 ```
 
+Trích từ `user-service/app/views.py`. Khối khai báo permission cho route quản trị cho thấy RBAC được ràng buộc ngay tại lớp truy cập API, không chỉ dừng ở mức mô tả khái niệm.
+
 ### 4.4.3 Luồng
 
 Luồng auth hiện tại có thể tóm tắt như sau: người dùng đăng nhập tại user-service qua gateway; token được cấp kèm claim role; client gửi bearer token ở các request cần bảo vệ; downstream service tự xác thực và áp quyền truy cập theo vai trò. Cơ chế này được xác nhận bằng dữ liệu kiểm tra vai trò trong `docs/chapter4/evidence/auth-rbac-check.json` và `docs/chapter4/evidence/role-flows-check.json`, đồng thời được phản ánh ở giao diện đa vai trò qua `docs/chapter4/screenshots/admin-users-fixed.png` và `docs/chapter4/screenshots/staff-orders-fixed.png`.
+
+Để diễn đạt tuần tự xác thực/phân quyền rõ hơn, sơ đồ sequence sau mô tả đầy đủ từ bước đăng nhập đến bước kiểm tra quyền ở downstream service.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant G as Gateway
+    participant U as user-service
+    participant O as order-service
+
+    C->>G: POST /api/users/auth/login (username, password)
+    G->>U: Forward /auth/login
+    U->>U: Validate credentials
+    U-->>G: Access JWT + Refresh JWT (role, user_id)
+    G-->>C: 200 + tokens
+
+    C->>G: GET /api/orders/orders (Bearer access JWT)
+    G->>O: Forward Authorization + X-Correlation-ID
+    O->>O: Verify JWT signature + claims
+    O->>O: Apply RBAC policy by role
+    O-->>G: Authorized/Forbidden response
+    G-->>C: Business data or 403
+```
+
+Chuỗi này cho thấy trách nhiệm được tách đúng biên: `user-service` phát danh tính, còn service nghiệp vụ tự thực thi xác thực claim và RBAC theo ngữ cảnh miền. Đây là điểm then chốt giúp mô hình JWT mở rộng theo microservices mà không phá vỡ tính độc lập chức năng.
 
 Từ góc nhìn học thuật, kiến trúc JWT hiện tại phù hợp phạm vi đồ án vì đảm bảo được ba yêu cầu cốt lõi: xác thực, phân quyền, và khả năng mở rộng theo service. Hạn chế nằm ở chỗ verification policy còn phân tán theo từng service; nếu mở rộng quy mô lớn hơn, hệ thống có thể cân nhắc thêm lớp token introspection hoặc policy engine tập trung.
 
@@ -222,11 +264,6 @@ Từ góc nhìn học thuật, kiến trúc JWT hiện tại phù hợp phạm v
 Giao tiếp liên service trong checkout là biểu hiện rõ nhất của kiến trúc cộng tác đa miền. `order-service` không chỉ tạo bản ghi đơn hàng mà còn điều phối chuỗi hành động phụ thuộc lẫn nhau với `cart-service`, `product-service`, `payment-service`, `shipping-service`. Nhờ vậy, trạng thái cuối cùng của đơn hàng phản ánh được kết quả thật từ các service downstream, thay vì cập nhật giả định.
 
 ### 4.5.2 Best Practice
-
-**File:** `order-service/app/service_clients.py`  
-**Khối mã:** `_send_request`  
-**Dòng:** 30-96  
-**Mục đích:** chuẩn hóa timeout, retry và lỗi gọi service
 
 ```python
 def _send_request(..., retries=1, json=None):
@@ -243,6 +280,8 @@ def _send_request(..., retries=1, json=None):
     _raise_for_response(response, service_name)
 ```
 
+Trích từ `order-service/app/service_clients.py`. Hàm này phản ánh cách chuẩn hóa timeout, retry và chuẩn hóa lỗi liên service, tức là chuyển rủi ro hạ tầng thành hành vi có thể kiểm soát ở tầng ứng dụng.
+
 Phần thiết kế đáng chú ý là retry được giới hạn cho thao tác ít rủi ro nhân bản side effect; các lệnh POST tạo payment/shipment không retry tự động. Đây là lựa chọn thận trọng nhằm giảm nguy cơ ghi trùng nghiệp vụ trong bối cảnh chưa triển khai idempotency key hoặc saga pattern đầy đủ.
 
 Đánh giá tổng thể cho thấy chiến lược hiện tại đủ tốt cho mục tiêu đồ án: rõ ràng, kiểm soát được luồng lỗi, dễ kiểm chứng bằng kịch bản thành công/thất bại. Tuy nhiên, khi yêu cầu độ bền giao dịch tăng cao, hệ thống sẽ cần chuyển một phần communication sang bất đồng bộ để giảm coupling thời gian thực.
@@ -254,11 +293,6 @@ Phần thiết kế đáng chú ý là retry được giới hạn cho thao tác
 Dockerfile được duy trì cho các service chính, cho phép đóng gói độc lập theo công nghệ (Django, FastAPI, Next.js, Nginx). Về phương diện kỹ thuật, điều này giúp ổn định dependency boundary của từng service và giảm sai lệch môi trường khi đánh giá tích hợp.
 
 ### 4.6.2 docker-compose.yml
-
-**File:** `docker-compose.yml`  
-**Khối mã:** security env chung + gateway + network  
-**Dòng:** 1-9, 281-294, 325-327  
-**Mục đích:** biểu diễn topology tích hợp và mạng nội bộ thống nhất
 
 ```yaml
 x-security-env: &security-env
@@ -284,6 +318,8 @@ services:
       - ai-service
 ```
 
+Trích từ `docker-compose.yml`. Khối cấu hình này minh họa trực tiếp topology tích hợp và mạng nội bộ thống nhất, là điều kiện quan trọng để tái lập kiểm thử end-to-end.
+
 Cấu hình trên cho thấy hai giá trị học thuật quan trọng. Một là tính tái lập: hệ thống có thể được dựng theo một topology nhất quán, phù hợp cho kiểm thử liên service. Hai là tính quan sát: vì tất cả thành phần cùng tham gia mạng chung, việc đối chiếu luồng xử lý và trạng thái container trở nên khả thi qua dữ liệu runtime.
 
 ## 4.7 Luồng hệ thống (End-to-End)
@@ -295,11 +331,6 @@ Use case mua hàng được tổ chức như một chuỗi nghiệp vụ liên m
 Dữ liệu thực thi trong `docs/chapter4/evidence/e2e-checkout-success.json` ghi nhận trạng thái cuối: đơn hàng chuyển sang `Shipping`, thanh toán ở trạng thái `Success`, vận chuyển ở trạng thái `Processing`. Ở chiều ngược lại, `docs/chapter4/evidence/e2e-checkout-payment-failure.json` cho thấy nhánh thất bại được xử lý có kiểm soát: thanh toán `Failed` dẫn tới đơn hàng `Cancelled`. Hai nhánh này xác nhận logic nghiệp vụ không bị cứng vào happy path.
 
 ### 4.7.2 Sequence logic
-
-**File:** `order-service/app/views.py`  
-**Khối mã:** `OrderListCreateView.create`  
-**Dòng:** 72-96  
-**Mục đích:** thể hiện state transition theo kết quả payment/shipping
 
 ```python
 payment = create_payment(order.id, user_id, total_price, correlation_id, data["simulate_payment_failure"])
@@ -317,9 +348,66 @@ if shipment["status"] in {"Processing", "Shipping", "Delivered"}:
     order.save(update_fields=["status"])
 ```
 
+Trích từ `order-service/app/views.py`. Nhánh điều kiện trong đoạn mã cho thấy state transition của đơn hàng phụ thuộc trực tiếp vào kết quả payment và shipment, đúng với logic điều phối đã phân tích.
+
 Khi đặt đoạn mã này cạnh dữ liệu runtime, có thể thấy logic điều phối được hiện thực hóa nhất quán từ mã nguồn đến trạng thái vận hành. Nhóm ảnh giao diện `docs/chapter4/screenshots/customer-orders-fixed.png` và `docs/chapter4/screenshots/customer-order-detail-fixed.png` bổ sung góc nhìn từ phía người dùng cuối: trạng thái đơn hàng không chỉ đúng ở API mà còn phản ánh lên tầng trình bày.
 
 Việc có thêm `docs/chapter4/screenshots/staff-orders-fixed.png` và `docs/chapter4/screenshots/admin-users-fixed.png` cũng giúp mở rộng phân tích end-to-end theo vai trò: cùng một dữ liệu nghiệp vụ nhưng hiển thị và quyền thao tác khác nhau theo RBAC.
+
+Để chuẩn hóa luận điểm về điều phối checkout nhiều service, sơ đồ sequence dưới đây mô tả nhánh chính và nhánh thanh toán thất bại trong cùng một khung logic nghiệp vụ.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant G as Gateway
+    participant O as order-service
+    participant CA as cart-service
+    participant P as product-service
+    participant PM as payment-service
+    participant S as shipping-service
+
+    C->>G: POST /api/orders/orders
+    G->>O: Forward create order request
+    O->>CA: GET cart by user
+    CA-->>O: Cart items
+    O->>P: GET product details
+    P-->>O: Product snapshot + pricing
+    O->>O: Create Order(status=Pending)
+    O->>PM: POST create payment
+    PM-->>O: Payment status
+
+    alt Payment Failed
+        O->>O: Update Order(status=Cancelled)
+        O-->>G: 402 Payment Required + order
+        G-->>C: Checkout failed
+    else Payment Success
+        O->>O: Update Order(status=Paid)
+        O->>S: POST create shipment
+        S-->>O: Shipment(status=Processing/Shipping/Delivered)
+        O->>O: Update Order(status=Shipping)
+        O->>CA: DELETE/clear cart
+        O-->>G: 201 Created + order
+        G-->>C: Checkout success
+    end
+```
+
+Sơ đồ khẳng định `order-service` là orchestration boundary và phản ánh trực tiếp state transition đã nêu trong mã nguồn `OrderListCreateView.create`. Việc thể hiện đồng thời nhánh success/failure cũng đáp ứng yêu cầu học thuật về chứng minh tính nhất quán nghiệp vụ ngoài happy path.
+
+Song song với sequence xử lý, sơ đồ trạng thái dưới đây diễn giải vòng đời đơn hàng theo các quyết định nghiệp vụ thực tế khi checkout.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending: create order
+    Pending --> Cancelled: payment != Success
+    Pending --> Paid: payment == Success
+    Paid --> Shipping: shipment in {Processing, Shipping, Delivered}
+    Shipping --> Delivered: downstream delivery completion
+    Cancelled --> [*]
+    Delivered --> [*]
+```
+
+Mô hình trạng thái này liên kết trực tiếp với dữ liệu thực nghiệm trong hai kịch bản e2e thành công và thất bại. Nhờ đó, phần phân tích không chỉ mô tả “luồng gọi API” mà còn chứng minh được logic vòng đời đơn hàng theo tiêu chí kiểm chứng của đề bài.
 
 ## 4.8 Triển khai Kubernetes (Optional)
 
@@ -330,6 +418,28 @@ Trong phạm vi hiện tại, triển khai chính dừng ở Docker Compose và 
 Mặt bằng observability hiện tại được xây trên ba lớp. Lớp thứ nhất là gateway logging với định dạng log chứa thông tin upstream và correlation id trong `gateway/nginx.conf`. Lớp thứ hai là logging ở application services, thể hiện qua cấu hình `LOGGING` trong các service Django và khởi tạo logging ở `ai-service/app/main.py`. Lớp thứ ba là health endpoint đồng nhất, được kiểm tra tập trung qua `scripts/health_check.ps1` và dữ liệu JSON tương ứng.
 
 Nhìn từ góc độ học thuật, hệ thống đã đạt ngưỡng “có thể quan sát để vận hành” ở mức đồ án: có điểm đo ingress, có điểm đo service-level, có kiểm tra liveness xuyên toàn hệ thống. Tuy nhiên, monitoring vẫn ở mức skeleton (tham chiếu tại `infrastructure/monitoring/prometheus.yml`), chưa mở rộng thành pipeline metrics và dashboard hoàn chỉnh. Điều này cần được ghi nhận như giới hạn kỹ thuật hiện hữu, không nên diễn giải thành đã có full-stack observability.
+
+Để tổng hợp ngắn gọn cách tín hiệu quan sát đi qua hệ thống, sơ đồ sau mô tả luồng logging-health ở mức tối thiểu nhưng bám sát triển khai hiện hành.
+
+```mermaid
+flowchart LR
+    RQ[Client Request] --> GW[Gateway Nginx]
+    GW --> SL[Service Logs Django/FastAPI]
+    GW --> GL[Gateway Access/Error Logs]
+    HC[scripts/health_check.ps1] --> H1[/api/users/health]
+    HC --> H2[/api/products/health]
+    HC --> H3[/api/orders/health]
+    HC --> H4[/api/ai/health]
+    H1 --> REP[(health-check.json)]
+    H2 --> REP
+    H3 --> REP
+    H4 --> REP
+    GL --> OBS[Observability Baseline]
+    SL --> OBS
+    REP --> OBS
+```
+
+Sơ đồ cho thấy observability hiện tại dựa trên sự kết hợp giữa log ingress, log service và kết quả health check tổng hợp, đúng với mức “vận hành được và kiểm chứng được” của đồ án. Đồng thời, việc chưa có lớp dashboard/alerting hoàn chỉnh vẫn nhất quán với nhận định giới hạn monitoring production-grade ở phần thảo luận.
 
 ## 4.10 Đánh giá hệ thống
 
