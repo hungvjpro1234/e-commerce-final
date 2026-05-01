@@ -1,0 +1,40 @@
+﻿{
+    "gateway":  {
+                    "service":  "gateway",
+                    "status":  "ok"
+                },
+    "user_service":  {
+                         "service":  "user-service",
+                         "status":  "ok"
+                     },
+    "product_service":  {
+                            "service":  "product-service",
+                            "status":  "ok"
+                        },
+    "cart_service":  {
+                         "service":  "cart-service",
+                         "status":  "ok"
+                     },
+    "order_service":  {
+                          "service":  "order-service",
+                          "status":  "ok"
+                      },
+    "payment_service":  {
+                            "service":  "payment-service",
+                            "status":  "ok"
+                        },
+    "shipping_service":  {
+                             "service":  "shipping-service",
+                             "status":  "ok"
+                         },
+    "ai_service":  {
+                       "service":  "ai-service",
+                       "status":  "ok",
+                       "version":  "phase-9",
+                       "dependencies":  {
+                                            "ai_db":  "postgresql@ai-db:5432",
+                                            "neo4j":  "bolt://neo4j:7687",
+                                            "product_service":  "http://product-service:8001"
+                                        }
+                   }
+}

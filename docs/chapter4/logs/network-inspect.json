@@ -1,0 +1,170 @@
+[
+    {
+        "Name": "chap2_e-commerce_ecom-network",
+        "Id": "119fdbe6c083f4405b8fc43fb13a719522b8c3711ecac5a527b4ed62c5a878d9",
+        "Created": "2026-05-01T00:58:33.299244828Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.19.0.0/16",
+                    "IPRange": "",
+                    "Gateway": "172.19.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {
+            "com.docker.compose.config-hash": "06140136bd0014a29b2b4ba122745bd670a616f9149072527ab48d4aef7f88d0",
+            "com.docker.compose.network": "ecom-network",
+            "com.docker.compose.project": "chap2_e-commerce",
+            "com.docker.compose.version": "5.0.1"
+        },
+        "Containers": {
+            "03d170154e41acc5c2ebdd1e36896b224ca299fb83f45f3fb59a7e31ffbd556e": {
+                "Name": "order-db",
+                "EndpointID": "9b8989479ccc195b0508ac80a6c4cb3845a267af156668fe549f6e3ddcdb0e35",
+                "MacAddress": "ce:89:b2:66:e2:07",
+                "IPv4Address": "172.19.0.5/16",
+                "IPv6Address": ""
+            },
+            "0dadab9f7c10247b6b0bdd0e68255df171d301829fad2b6efadd0feeaa47a6ca": {
+                "Name": "user-db",
+                "EndpointID": "a689fcf6b48cd5b82a90888e659502dc77146f0cacbc9cd51d1d7d11095cdd18",
+                "MacAddress": "22:13:e3:5a:ca:bd",
+                "IPv4Address": "172.19.0.8/16",
+                "IPv6Address": ""
+            },
+            "0ea666c8dceae7b5adc0bda024c0f076c43208480ff79b8d8bfe1a586745d9f8": {
+                "Name": "gateway",
+                "EndpointID": "c870f06bc8044ee89ce3277f0703c2509973b97cc98d47f03bb5bee2bc8fb2fb",
+                "MacAddress": "4e:06:d1:de:ba:ae",
+                "IPv4Address": "172.19.0.17/16",
+                "IPv6Address": ""
+            },
+            "14b8baf5dd2a0069af8649f9fa46ddfc3516db1b40b410e6fc5c5a5b22746254": {
+                "Name": "payment-db",
+                "EndpointID": "e324547b6ab9bcacab86ccf56c801ee047eca1293685e5d0480b94398ef7cb2f",
+                "MacAddress": "4e:f5:2f:46:d9:01",
+                "IPv4Address": "172.19.0.9/16",
+                "IPv6Address": ""
+            },
+            "2f02033ae917f4ed6478b28e3920714a0138c8ff20bd0ed6c4fe737b0a01520e": {
+                "Name": "payment-service",
+                "EndpointID": "26fea7f9bdd617772033ed0d08607117035eddcfce278f95278e429161804f14",
+                "MacAddress": "26:f0:66:58:b2:57",
+                "IPv4Address": "172.19.0.13/16",
+                "IPv6Address": ""
+            },
+            "3c178e222ea787f006fb5e07c6b3ccda8bdf2299c38354cd622c6b02f1dc651d": {
+                "Name": "cart-db",
+                "EndpointID": "dbfe9117f7b516381e177949de5ec0b41f6b866726dc3a93024bdfc8a9ed2bbc",
+                "MacAddress": "9e:40:18:8c:86:d5",
+                "IPv4Address": "172.19.0.4/16",
+                "IPv6Address": ""
+            },
+            "3c8e6be849138870a0e15bace50e81943c8f1090319989f4268d01edbf740c66": {
+                "Name": "shipping-db",
+                "EndpointID": "7cbeec84a7cafc652fc495c245a00c7ecc9187ed02ae6d41ec0245501b204b75",
+                "MacAddress": "22:f2:e7:02:d5:b5",
+                "IPv4Address": "172.19.0.2/16",
+                "IPv6Address": ""
+            },
+            "5587facc2499d40ad020e8656f20e9aaad125ec4467c52bc404a3f2236632fa3": {
+                "Name": "user-service",
+                "EndpointID": "67963611b72ae2cb8a81788b3f694708d8adbd236386249433518ff8236c8be3",
+                "MacAddress": "fe:ef:24:22:91:7b",
+                "IPv4Address": "172.19.0.14/16",
+                "IPv6Address": ""
+            },
+            "5cea948bd5cc5d77eff5f8f4a291d5c1628eb96d44d460054802a2c184bdc2bc": {
+                "Name": "ai-service",
+                "EndpointID": "2f08734049d5c7fd61ccd38a11214149f8dbc41fa095bf4e093b07df3c5c6c91",
+                "MacAddress": "de:22:d2:6c:d0:9c",
+                "IPv4Address": "172.19.0.16/16",
+                "IPv6Address": ""
+            },
+            "87e38be16c645d0b4d60769c03cee48a6dc751d33923b9c579812d2bfdf9f2b6": {
+                "Name": "order-service",
+                "EndpointID": "3c40985cbec24ecbafdc0c91627b2e75cbf0b9f1f36cf4e078338ccb28b758f4",
+                "MacAddress": "c6:48:e3:c2:2f:f9",
+                "IPv4Address": "172.19.0.15/16",
+                "IPv6Address": ""
+            },
+            "954e66d652da29937bcbdef75845c25fb050f900b2c9f6ae7526314f810d9360": {
+                "Name": "frontend",
+                "EndpointID": "64740dbbfed2ea6b44790478746735dd9a64541a5f5f44b0fac475ff2be95ce4",
+                "MacAddress": "b6:0b:04:a1:86:82",
+                "IPv4Address": "172.19.0.18/16",
+                "IPv6Address": ""
+            },
+            "9bd75dbc4f646f5457b1ec2f312aecbfef8796c51eab71bd6f79ac61626a89f9": {
+                "Name": "cart-service",
+                "EndpointID": "9b899c73e650ce858fedba901921abbeec1164f83c1defc2df6216d4c0048c09",
+                "MacAddress": "ee:8a:ff:2a:64:7c",
+                "IPv4Address": "172.19.0.12/16",
+                "IPv6Address": ""
+            },
+            "a0b3b2729fd067653150251fbaa4903460318a99db304e138eb99f6214aac067": {
+                "Name": "product-db",
+                "EndpointID": "05d75b0ebe0f9b9a1650001535edce8a9f2d7c83b71e5cd6d2e4bef00179c193",
+                "MacAddress": "52:a7:bb:9e:48:35",
+                "IPv4Address": "172.19.0.3/16",
+                "IPv6Address": ""
+            },
+            "a537009fb261a42881fc651d6ba4af5e9e57b1b7227cbb2ea1347d66e01ce990": {
+                "Name": "product-service",
+                "EndpointID": "0c1a550779131d7f8a0c66ec41148d90ed8751dd8c3678c58b9271f0a9216a07",
+                "MacAddress": "9a:3f:3b:55:f1:44",
+                "IPv4Address": "172.19.0.10/16",
+                "IPv6Address": ""
+            },
+            "c439295cf5325e36057029cee132be7af2a317da59d1c6c26f4b6575ae408ab2": {
+                "Name": "shipping-service",
+                "EndpointID": "c232f2c3f6a5958d4036108fbebf661998b807bd633aca937af15f2dbcbe878c",
+                "MacAddress": "96:60:94:1d:f8:8f",
+                "IPv4Address": "172.19.0.11/16",
+                "IPv6Address": ""
+            },
+            "d5937caf3eedf31f4dd2368ce841d5840f21e0ac136f817a2a2857a50e6d2ce4": {
+                "Name": "neo4j",
+                "EndpointID": "728e3e4bcb8e1b419e4eb7ac79cf9c468a8bbdf1f489b2aa0469cd28b223ab9d",
+                "MacAddress": "f2:e5:0e:f1:2a:a4",
+                "IPv4Address": "172.19.0.7/16",
+                "IPv6Address": ""
+            },
+            "d9251e529654367536321b8500c90c68f2e482ef62647dd62c9dc4b98b30889b": {
+                "Name": "ai-db",
+                "EndpointID": "6d0d3b43de1d7ee2c6b6eca8884aca6dda179bce46775bdf47143623be1a81a7",
+                "MacAddress": "a6:c2:62:52:5b:61",
+                "IPv4Address": "172.19.0.6/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.19.0.0/16": {
+                        "IPsInUse": 20,
+                        "DynamicIPsAvailable": 65516
+                    }
+                }
+            }
+        }
+    }
+]

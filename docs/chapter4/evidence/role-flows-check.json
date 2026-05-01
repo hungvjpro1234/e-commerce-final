@@ -1,0 +1,23 @@
+﻿{
+    "verified_at":  "2026-05-01T08:51:36.8214798+07:00",
+    "customer":  {
+                     "user_id":  3,
+                     "catalog_product_id":  1,
+                     "order_id":  29,
+                     "order_status_after_create":  "Shipping",
+                     "payment_status":  "Success",
+                     "shipping_status":  "Processing"
+                 },
+    "staff":  {
+                  "user_id":  2,
+                  "listed_orders":  29,
+                  "shipping_status_before_update":  "Processing",
+                  "shipping_status_after_update":  "Delivered",
+                  "order_status_after_update":  "Completed"
+              },
+    "admin":  {
+                  "user_id":  1,
+                  "user_count":  15,
+                  "filtered_orders_for_customer":  14
+              }
+}

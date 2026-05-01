@@ -1,0 +1,14 @@
+﻿{
+    "gateway_status":  "ok",
+    "behavior_event_id":  33,
+    "recommendation_user_id":  1,
+    "recommendation_query":  "budget laptop",
+    "recommendation_total":  5,
+    "top_recommendation_product":  "Laptop Pro 14",
+    "top_recommendation_category":  "Electronics",
+    "top_recommendation_score":  0.4167,
+    "chatbot_query_type":  "budget",
+    "chatbot_top_product":  "Laptop Pro 14",
+    "chatbot_top_product_category":  "Electronics",
+    "chatbot_context_count":  2
+}

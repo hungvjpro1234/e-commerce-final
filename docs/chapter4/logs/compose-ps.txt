@@ -1,0 +1,18 @@
+NAME               IMAGE                               COMMAND                  SERVICE            CREATED          STATUS          PORTS
+ai-db              postgres:16                         "docker-entrypoint.s…"   ai-db              20 minutes ago   Up 20 minutes   0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp
+ai-service         chap2_e-commerce-ai-service         "sh -c 'until python…"   ai-service         12 minutes ago   Up 12 minutes   0.0.0.0:8007->8007/tcp, [::]:8007->8007/tcp
+cart-db            mysql:8.0                           "docker-entrypoint.s…"   cart-db            20 minutes ago   Up 20 minutes   0.0.0.0:3308->3306/tcp, [::]:3308->3306/tcp
+cart-service       chap2_e-commerce-cart-service       "sh -c 'until python…"   cart-service       12 minutes ago   Up 12 minutes   0.0.0.0:8003->8003/tcp, [::]:8003->8003/tcp
+frontend           chap2_e-commerce-frontend           "docker-entrypoint.s…"   frontend           20 minutes ago   Up 20 minutes   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+gateway            chap2_e-commerce-gateway            "/docker-entrypoint.…"   gateway            12 minutes ago   Up 12 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
+neo4j              neo4j:5                             "tini -g -- /startup…"   neo4j              20 minutes ago   Up 20 minutes   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+order-db           mysql:8.0                           "docker-entrypoint.s…"   order-db           20 minutes ago   Up 20 minutes   0.0.0.0:3309->3306/tcp, [::]:3309->3306/tcp
+order-service      chap2_e-commerce-order-service      "sh -c 'until python…"   order-service      12 minutes ago   Up 12 minutes   0.0.0.0:8004->8004/tcp, [::]:8004->8004/tcp
+payment-db         mysql:8.0                           "docker-entrypoint.s…"   payment-db         20 minutes ago   Up 20 minutes   0.0.0.0:3310->3306/tcp, [::]:3310->3306/tcp
+payment-service    chap2_e-commerce-payment-service    "sh -c 'until python…"   payment-service    12 minutes ago   Up 12 minutes   0.0.0.0:8005->8005/tcp, [::]:8005->8005/tcp
+product-db         postgres:16                         "docker-entrypoint.s…"   product-db         20 minutes ago   Up 20 minutes   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+product-service    chap2_e-commerce-product-service    "sh -c 'until python…"   product-service    12 minutes ago   Up 12 minutes   0.0.0.0:8001->8001/tcp, [::]:8001->8001/tcp
+shipping-db        mysql:8.0                           "docker-entrypoint.s…"   shipping-db        20 minutes ago   Up 20 minutes   0.0.0.0:3311->3306/tcp, [::]:3311->3306/tcp
+shipping-service   chap2_e-commerce-shipping-service   "sh -c 'until python…"   shipping-service   12 minutes ago   Up 12 minutes   0.0.0.0:8006->8006/tcp, [::]:8006->8006/tcp
+user-db            mysql:8.0                           "docker-entrypoint.s…"   user-db            20 minutes ago   Up 20 minutes   0.0.0.0:3307->3306/tcp, [::]:3307->3306/tcp
+user-service       chap2_e-commerce-user-service       "sh -c 'until python…"   user-service       12 minutes ago   Up 12 minutes   0.0.0.0:8002->8002/tcp, [::]:8002->8002/tcp

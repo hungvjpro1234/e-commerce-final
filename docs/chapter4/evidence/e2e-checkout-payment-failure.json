@@ -1,0 +1,10 @@
+﻿{
+    "gateway_status":  "ok",
+    "product_id":  1,
+    "product_name":  "Django for APIs",
+    "cart_item_quantity":  1,
+    "order_id":  28,
+    "order_status":  "Cancelled",
+    "payment_status":  "Failed",
+    "simulated_fail":  true
+}

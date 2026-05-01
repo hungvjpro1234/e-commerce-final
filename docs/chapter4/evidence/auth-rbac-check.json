@@ -1,0 +1,13 @@
+﻿{
+    "gateway_base_url":  "http://localhost:8080",
+    "login_returns_token":  true,
+    "customer_token_claims":  {
+                                  "has_refresh":  true,
+                                  "has_access":  true
+                              },
+    "protected_route_without_token_status":  401,
+    "admin_route_with_customer_token_status":  403,
+    "admin_route_with_admin_token_status":  200,
+    "admin_user_count":  15,
+    "verified_at":  "2026-05-01T08:48:09.4956055+07:00"
+}
